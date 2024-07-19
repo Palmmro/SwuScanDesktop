@@ -1,7 +1,6 @@
 import net.sourceforge.tess4j.ITesseract;
 import net.sourceforge.tess4j.Tesseract;
 import nu.pattern.OpenCV;
-import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
 import org.opencv.core.Point;
@@ -15,6 +14,8 @@ import org.opencv.imgproc.Imgproc;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import javax.imageio.ImageIO;
 
 public class Main {
@@ -23,10 +24,15 @@ public class Main {
     private static final int TWO = 98;
     private static final int THREE = 99;
     private static final int FOUR = 100;
+    private static final int FIVE = 101;
+
+    private static final List<Card> currentCards = new ArrayList<>();
+
+    private static final CollectionUtil collectionUtil = new CollectionUtil();
+
 
     static {
         // Load the OpenCV native library
-//        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
         OpenCV.loadLocally();
     }
 
@@ -45,7 +51,7 @@ public class Main {
 
         ITesseract tesseract = new Tesseract();
         tesseract.setDatapath("C:/Program Files/Tesseract-OCR/tessdata");
-        tesseract.setTessVariable("user_defined_dpi", "96");
+        tesseract.setTessVariable("user_defined_dpi", "70");
 
         Mat frame = new Mat();
         String displayText = "Scanning";
@@ -69,10 +75,14 @@ public class Main {
                     String recognizedText = performOCR(frame, tesseract);
                     if (!recognizedText.isEmpty()) {
 //                        System.out.println("Recognized Text: " + recognizedText);
-                        if (recognizedText.toLowerCase().contains("Incinerator Trooper".toLowerCase())) {
-                            displayText = "Incinerator Trooper? 1/2/3/4 to add.";
-                            cardName = "Incinerator Trooper";
+                        List<String> collection = collectionUtil.getCollectionNames();
+                        for (String card : collection){
 
+                            if (recognizedText.toLowerCase().contains(card.toLowerCase())) {
+                                displayText = card+"? 1(N)/2(H)/3(F)/4(HF) to add.";
+                                cardName = card;
+
+                            }
                         }
                     }
                 }
@@ -80,27 +90,41 @@ public class Main {
                 var key = HighGui.pressedKey;
                 if(key == ONE && cardName.length() != 0){
                     System.out.println("Added regular "+cardName+" to csv");
+                    saveCard(cardName, false);
                     cardName = "";
                     displayText = "Scanning";
                 }
                 if(key == TWO && cardName.length() != 0){
                     System.out.println("Added hyperspace "+cardName+" to csv");
+                    saveHyperspaceCard(cardName, false);
                     cardName = "";
                     displayText = "Scanning";
                 }
                 if(key == THREE && cardName.length() != 0){
                     System.out.println("Added foil "+cardName+" to csv");
+                    saveCard(cardName, true);
                     cardName = "";
                     displayText = "Scanning";
                 }
                 if(key == FOUR && cardName.length() != 0){
                     System.out.println("Added hyperspace foil "+cardName+" to csv");
+                    saveHyperspaceCard(cardName, true);
                     cardName = "";
                     displayText = "Scanning";
-                }if(key == ZERO && cardName.length() != 0){
+                }
+                if(key == ZERO && cardName.length() != 0){
                     System.out.println("Reset");
                     cardName = "";
                     displayText = "Scanning";
+                }
+                if(key == FIVE ){
+                    System.out.println("Saving to csv");
+                    for(Card card: currentCards){
+                        System.out.println(card);
+                    }
+                    collectionUtil.saveToCsv(currentCards);
+                    cardName = "";
+                    displayText = "Saved to csv";
                 }
 
 
@@ -114,6 +138,22 @@ public class Main {
         capture.release();
         HighGui.destroyAllWindows();
     }
+
+    private static void saveCard(String cardName, boolean isFoil){
+        Card card = collectionUtil.getCardFromName(cardName);
+
+        currentCards.add(new Card(card.getSet(),card.getCardName(),card.getCardNumber(),1,isFoil));
+
+    }
+    private static void saveHyperspaceCard(String cardName, boolean isFoil){
+        Card card = collectionUtil.getHyperspaceCardFromName(cardName);
+
+        currentCards.add(new Card(card.getSet(),card.getCardName(),card.getCardNumber(),1,isFoil));
+
+    }
+
+
+
 
     private static String performOCR(Mat frame, ITesseract tesseract) {
         try {
