@@ -79,7 +79,7 @@ public class Main {
                         for (String card : collection){
 
                             if (recognizedText.toLowerCase().contains(card.toLowerCase())) {
-                                displayText = card+"? 1(N)/2(H)/3(F)/4(HF) to add.";
+                                displayText = card+"? \n1(N)/2(H)/3(F)/4(HF) to add.";
                                 cardName = card;
 
                             }
@@ -95,10 +95,11 @@ public class Main {
                     displayText = "Scanning";
                 }
                 if(key == TWO && cardName.length() != 0){
-                    System.out.println("Added hyperspace "+cardName+" to csv");
-                    saveHyperspaceCard(cardName, false);
-                    cardName = "";
-                    displayText = "Scanning";
+                    if(saveHyperspaceCard(cardName, false)){
+                        System.out.println("Added hyperspace "+cardName+" to csv");
+                        cardName = "";
+                        displayText = "Scanning";
+                    }
                 }
                 if(key == THREE && cardName.length() != 0){
                     System.out.println("Added foil "+cardName+" to csv");
@@ -107,10 +108,11 @@ public class Main {
                     displayText = "Scanning";
                 }
                 if(key == FOUR && cardName.length() != 0){
-                    System.out.println("Added hyperspace foil "+cardName+" to csv");
-                    saveHyperspaceCard(cardName, true);
-                    cardName = "";
-                    displayText = "Scanning";
+                    if(saveHyperspaceCard(cardName, true)) {
+                        System.out.println("Added hyperspace foil " + cardName + " to csv");
+                        cardName = "";
+                        displayText = "Scanning";
+                    }
                 }
                 if(key == ZERO && cardName.length() != 0){
                     System.out.println("Reset");
@@ -145,10 +147,14 @@ public class Main {
         currentCards.add(new Card(card.getSet(),card.getCardName(),card.getCardNumber(),1,isFoil));
 
     }
-    private static void saveHyperspaceCard(String cardName, boolean isFoil){
+    private static boolean saveHyperspaceCard(String cardName, boolean isFoil){
         Card card = collectionUtil.getHyperspaceCardFromName(cardName);
-
+        if(card == null){
+            System.out.println("No hyperspace available for card");
+            return false;
+        }
         currentCards.add(new Card(card.getSet(),card.getCardName(),card.getCardNumber(),1,isFoil));
+        return true;
 
     }
 
@@ -178,19 +184,32 @@ public class Main {
         int fontFace = 0;
         double fontScale = 1.0;
         int thickness = 2;
-        Point textOrg = new Point(10, frame.rows() - 10);
+        int baseLine[] = new int[1];
+        Point textOrg = new Point(10, frame.rows() - 50);
 
-        // Calculate the text size to create a black box
-        int baseline = 0;
-        int[] baseLine = {baseline};
-        Size textSize = Imgproc.getTextSize(text, fontFace, fontScale, thickness, baseLine);
+        // Split the text into lines
+        String[] lines = text.split("\n");
 
-        // Draw the black rectangle
-        Imgproc.rectangle(frame, new Point(textOrg.x, textOrg.y - textSize.height),
-                new Point(textOrg.x + textSize.width, textOrg.y + baseLine[0]),
+        // Calculate the text size for each line and find the maximum width
+        double maxWidth = 0;
+        int totalHeight = 0;
+        int lineSpacing = 30; // Additional space between lines
+
+        for (String line : lines) {
+            Size textSize = Imgproc.getTextSize(line, fontFace, fontScale, thickness, baseLine);
+            maxWidth = Math.max(maxWidth, textSize.width);
+            totalHeight += textSize.height + lineSpacing; // Adding space between lines
+        }
+
+        // Draw the black rectangle for all lines
+        Imgproc.rectangle(frame, new Point(textOrg.x, textOrg.y - totalHeight),
+                new Point(textOrg.x + maxWidth, textOrg.y + baseLine[0]),
                 new Scalar(0, 0, 0), -1);
 
-        // Put the text over the rectangle
-        Imgproc.putText(frame, text, textOrg, fontFace, fontScale, new Scalar(255, 255, 255), thickness);
+        // Draw each line of text with additional spacing
+        for (int i = 0; i < lines.length; i++) {
+            Point lineOrg = new Point(textOrg.x, textOrg.y - totalHeight + (i + 1) * (baseLine[0] + lineSpacing));
+            Imgproc.putText(frame, lines[i], lineOrg, fontFace, fontScale, new Scalar(255, 255, 255), thickness);
+        }
     }
 }
