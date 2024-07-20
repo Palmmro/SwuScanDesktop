@@ -50,7 +50,14 @@ public class CollectionUtil {
                     //CardName,Set,CardNumber,VariantType,Rarity,Count,IsFoil
                     //Gar Saxon,SHD,001,Normal,Common,3,False
                     if(variantType.equals("Normal")){
-                        fullCollectionMapNormal.put(cardName, new Card(cardSet,cardName,cardNumber,1,Boolean.parseBoolean(isFoil)));
+                        Card cardToAdd = new Card(cardSet,cardName,cardNumber,1,Boolean.parseBoolean(isFoil));
+                        Card existingCard = fullCollectionMapNormal.get(cardName);
+                        if(fullCollectionMapNormal.get(cardName) != null){
+                            existingCard.setUniqueDisplayName(existingCard.getCardName() + " (Leader)");
+                            cardToAdd.setUniqueDisplayName(cardToAdd.getCardName() + " (Unit)");
+                            fullCollectionMapNormal.put(existingCard.getUniqueDisplayName(), existingCard);
+                        }
+                        fullCollectionMapNormal.put(cardToAdd.getUniqueDisplayName(), cardToAdd);
                     } else if (variantType.equals("Showcase")){
                         fullCollectionMapShowcase.put(cardName, new Card(cardSet,cardName,cardNumber,1,Boolean.parseBoolean(isFoil)));
                     } else if (variantType.equals("Hyperspace")){
@@ -84,6 +91,9 @@ public class CollectionUtil {
 
     public List<String> getCollectionNames(){
         return new ArrayList<>(fullCollectionMapNormal.keySet());
+    }
+    public List<Card> getCollectionCards(){
+        return new ArrayList<>(fullCollectionMapNormal.values());
     }
 
     public Card getCardFromName(String name){

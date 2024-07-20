@@ -25,6 +25,7 @@ public class Main {
     private static final int THREE = 99;
     private static final int FOUR = 100;
     private static final int FIVE = 101;
+    private static final int S = 83;
 
     private static final List<Card> currentCards = new ArrayList<>();
 
@@ -41,8 +42,8 @@ public class Main {
         VideoCapture capture = new VideoCapture(1);
 
         // Set the resolution to 1920x1080 (or whatever the webcam supports)
-        capture.set(3, 1920); // Set width
-        capture.set(4, 1080); // Set height
+//        capture.set(3, 1920); // Set width
+//        capture.set(4, 1080); // Set height
 
         if (!capture.isOpened()) {
             System.out.println("Error: Could not open video capture.");
@@ -55,7 +56,7 @@ public class Main {
 
         Mat frame = new Mat();
         String displayText = "Scanning";
-        String cardName = "";
+        Card foundCard = null;
 
         while (true) {
             // Read a frame from the webcam
@@ -72,61 +73,85 @@ public class Main {
                 if (HighGui.waitKey(1000) == 'q') {
                     break;
                 } else {
-                    String recognizedText = performOCR(frame, tesseract);
-                    if (!recognizedText.isEmpty()) {
-//                        System.out.println("Recognized Text: " + recognizedText);
-                        List<String> collection = collectionUtil.getCollectionNames();
-                        for (String card : collection){
-
-                            if (recognizedText.toLowerCase().contains(card.toLowerCase())) {
-                                displayText = card+"? \n1(N)/2(H)/3(F)/4(HF) to add.";
-                                cardName = card;
-
-                            }
+                    if(displayText.equals("Scanning")){
+                        String recognizedText = performOCR(frame, tesseract);
+                        if (!recognizedText.isEmpty()) {
+    //                        System.out.println("Recognized Text: " + recognizedText);
+                            List<Card> collection = collectionUtil.getCollectionCards();
+                                foundCard = TextValidator.findCard(recognizedText,collection);
+                                if(!foundCard.getCardName().isEmpty()){
+                                    displayText = foundCard.getUniqueDisplayName()+"? \n1(N)/2(H)/3(F)/4(HF) to add.";
+                                }
+    //                        for (String card : collection){
+    //
+    //                            if (recognizedText.toLowerCase().contains(card.toLowerCase())) {
+    //                                displayText = card+"? \n1(N)/2(H)/3(F)/4(HF) to add.";
+    //                                cardName = card;
+    //
+    //                            }
+    //                        }
                         }
                     }
                 }
 
                 var key = HighGui.pressedKey;
-                if(key == ONE && cardName.length() != 0){
-                    System.out.println("Added regular "+cardName+" to csv");
-                    saveCard(cardName, false);
-                    cardName = "";
+//                System.out.println(key);
+                if(key == ONE && foundCard != null){
+                    System.out.println("Added regular "+foundCard.getUniqueDisplayName()+" to csv");
+                    saveCard(foundCard, false);
+                    foundCard = null;
                     displayText = "Scanning";
                 }
-                if(key == TWO && cardName.length() != 0){
-                    if(saveHyperspaceCard(cardName, false)){
-                        System.out.println("Added hyperspace "+cardName+" to csv");
-                        cardName = "";
+                if(key == TWO && foundCard != null){
+                    if(saveHyperspaceCard(foundCard, false)){
+                        System.out.println("Added hyperspace "+foundCard.getUniqueDisplayName()+" to csv");
+                        foundCard = null;
                         displayText = "Scanning";
                     }
                 }
-                if(key == THREE && cardName.length() != 0){
-                    System.out.println("Added foil "+cardName+" to csv");
-                    saveCard(cardName, true);
-                    cardName = "";
+                if(key == THREE && foundCard != null){
+                    System.out.println("Added foil "+foundCard.getUniqueDisplayName()+" to csv");
+                    saveCard(foundCard, true);
+                    foundCard = null;
                     displayText = "Scanning";
                 }
-                if(key == FOUR && cardName.length() != 0){
-                    if(saveHyperspaceCard(cardName, true)) {
-                        System.out.println("Added hyperspace foil " + cardName + " to csv");
-                        cardName = "";
+                if(key == FOUR && foundCard != null){
+                    if(saveHyperspaceCard(foundCard, true)) {
+                        System.out.println("Added hyperspace foil " + foundCard.getUniqueDisplayName() + " to csv");
+                        foundCard = null;
                         displayText = "Scanning";
                     }
                 }
-                if(key == ZERO && cardName.length() != 0){
+                if(key == FIVE){
+                    if(foundCard != null && !foundCard.getCardName().equals(foundCard.getUniqueDisplayName())){
+
+                        //find other card
+                        boolean isExistingLeader = foundCard.getUniqueDisplayName().contains("(Leader)");
+                        if(isExistingLeader){
+                            foundCard = collectionUtil.getCardFromName(foundCard.getCardName() + " (Unit)");
+                        } else {
+                            foundCard = collectionUtil.getCardFromName(foundCard.getCardName() + " (Leader)");
+                        }
+                        displayText = foundCard.getUniqueDisplayName()+"? \n1(N)/2(H)/3(F)/4(HF) to add.";
+                        //if pressed twice this is null
+                    }
+                }
+                if(key == ZERO){
                     System.out.println("Reset");
-                    cardName = "";
+                    foundCard = null;
                     displayText = "Scanning";
                 }
-                if(key == FIVE ){
+                if(key == S ){
                     System.out.println("Saving to csv");
                     for(Card card: currentCards){
                         System.out.println(card);
                     }
                     collectionUtil.saveToCsv(currentCards);
-                    cardName = "";
+                    foundCard = null;
                     displayText = "Saved to csv";
+                }
+                if(foundCard!=null){
+                    System.out.println(foundCard.getUniqueDisplayName());
                 }
 
 
@@ -141,14 +166,14 @@ public class Main {
         HighGui.destroyAllWindows();
     }
 
-    private static void saveCard(String cardName, boolean isFoil){
-        Card card = collectionUtil.getCardFromName(cardName);
+    private static void saveCard(Card card, boolean isFoil){
+//        Card card = collectionUtil.getCardFromName(cardName);
 
         currentCards.add(new Card(card.getSet(),card.getCardName(),card.getCardNumber(),1,isFoil));
 
     }
-    private static boolean saveHyperspaceCard(String cardName, boolean isFoil){
-        Card card = collectionUtil.getHyperspaceCardFromName(cardName);
+    private static boolean saveHyperspaceCard(Card card, boolean isFoil){
+//        Card card = collectionUtil.getHyperspaceCardFromName(cardName);
         if(card == null){
             System.out.println("No hyperspace available for card");
             return false;
@@ -184,7 +209,7 @@ public class Main {
         int fontFace = 0;
         double fontScale = 1.0;
         int thickness = 2;
-        int baseLine[] = new int[1];
+        int[] baseLine = new int[1];
         Point textOrg = new Point(10, frame.rows() - 50);
 
         // Split the text into lines
