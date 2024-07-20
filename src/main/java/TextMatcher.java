@@ -51,11 +51,6 @@ public class TextMatcher {
 
             for (Card card : cards) {
                 String substring = longString.substring(i, Math.min(i + card.getCardName().length(),longString.length()));
-                //
-                if(i==3 && card.getCardName().equals("Outland TIE Vanguard")){
-                    System.out.println("hello");
-                }
-                //
                 int distance = levenshteinDistance.apply(substring.strip().toUpperCase().replace('Q','O'), card.getCardName().strip().toUpperCase().replace('Q','O'));
                 if (distance < smallestDistance) {
                     smallestDistance = distance;
