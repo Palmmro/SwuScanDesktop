@@ -79,7 +79,7 @@ public class Main {
     //                        System.out.println("Recognized Text: " + recognizedText);
                             List<Card> collection = collectionUtil.getCollectionCards();
                                 foundCard = TextValidator.findCard(recognizedText,collection);
-                                if(!foundCard.getCardName().isEmpty()){
+                                if(foundCard != null){
                                     displayText = foundCard.getUniqueDisplayName()+"? \n1(N)/2(H)/3(F)/4(HF) to add.";
                                 }
     //                        for (String card : collection){

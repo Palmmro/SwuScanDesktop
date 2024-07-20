@@ -13,21 +13,21 @@ public class CollectionUtil {
     private final HashMap<String,Card> fullCollectionMapHyperspace = new HashMap<>();
     private final HashMap<String,Card> fullCollectionMapShowcase = new HashMap<>();
 
-    public static void main(String[] args) {
-        CollectionUtil collectionUtil = new CollectionUtil();
-        List<Card> cards = new ArrayList<>();
-        for(int i = 1; i <= 522; i++){
-            String cardNumber = String.valueOf(i);
-            String prefix = "";
-            if(i<10){
-                prefix = "00";
-            } else if (i<100){
-                prefix = "0";
-            }
-            cards.add(new Card("SHD","",prefix+cardNumber,1,false));
-        }
-        collectionUtil.saveToCsv(cards);
-    }
+//    public static void main(String[] args) {
+//        CollectionUtil collectionUtil = new CollectionUtil();
+//        List<Card> cards = new ArrayList<>();
+//        for(int i = 1; i <= 522; i++){
+//            String cardNumber = String.valueOf(i);
+//            String prefix = "";
+//            if(i<10){
+//                prefix = "00";
+//            } else if (i<100){
+//                prefix = "0";
+//            }
+//            cards.add(new Card("SHD","",prefix+cardNumber,1,false));
+//        }
+//        collectionUtil.saveToCsv(cards);
+//    }
 
     public CollectionUtil(){
         //load full collection from membory
