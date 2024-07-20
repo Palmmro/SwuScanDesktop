@@ -27,6 +27,9 @@ public class Main {
     private static final int FIVE = 101;
     private static final int S = 83;
 
+    private static final String SCANNING_TEXT = "Scanning (S to save)";
+    private static final String OPTIONS_TEXT = "? \n1(N)/2(H)/3(F)/4(HF) to add. \n0 to reset. 5 to swap unit/leader.";
+
     private static final List<Card> currentCards = new ArrayList<>();
 
     private static final CollectionUtil collectionUtil = new CollectionUtil();
@@ -55,7 +58,7 @@ public class Main {
         tesseract.setTessVariable("user_defined_dpi", "70");
 
         Mat frame = new Mat();
-        String displayText = "Scanning";
+        String displayText = SCANNING_TEXT;
         Card foundCard = null;
 
         while (true) {
@@ -70,17 +73,17 @@ public class Main {
 
 
 
-                if (HighGui.waitKey(1000) == 'q') {
+                if (HighGui.waitKey(500) == 'q') {
                     break;
                 } else {
-                    if(displayText.equals("Scanning")){
+                    if(displayText.equals(SCANNING_TEXT)){
                         String recognizedText = performOCR(frame, tesseract);
                         if (!recognizedText.isEmpty()) {
     //                        System.out.println("Recognized Text: " + recognizedText);
                             List<Card> collection = collectionUtil.getCollectionCards();
                                 foundCard = TextValidator.findCard(recognizedText,collection);
                                 if(foundCard != null){
-                                    displayText = foundCard.getUniqueDisplayName()+"? \n1(N)/2(H)/3(F)/4(HF) to add.";
+                                    displayText = foundCard.getUniqueDisplayName()+OPTIONS_TEXT;
                                 }
     //                        for (String card : collection){
     //
@@ -100,26 +103,26 @@ public class Main {
                     System.out.println("Added regular "+foundCard.getUniqueDisplayName()+" to csv");
                     saveCard(foundCard, false);
                     foundCard = null;
-                    displayText = "Scanning";
+                    displayText = SCANNING_TEXT;
                 }
                 if(key == TWO && foundCard != null){
                     if(saveHyperspaceCard(foundCard, false)){
                         System.out.println("Added hyperspace "+foundCard.getUniqueDisplayName()+" to csv");
                         foundCard = null;
-                        displayText = "Scanning";
+                        displayText = SCANNING_TEXT;
                     }
                 }
                 if(key == THREE && foundCard != null){
                     System.out.println("Added foil "+foundCard.getUniqueDisplayName()+" to csv");
                     saveCard(foundCard, true);
                     foundCard = null;
-                    displayText = "Scanning";
+                    displayText = SCANNING_TEXT;
                 }
                 if(key == FOUR && foundCard != null){
                     if(saveHyperspaceCard(foundCard, true)) {
                         System.out.println("Added hyperspace foil " + foundCard.getUniqueDisplayName() + " to csv");
                         foundCard = null;
-                        displayText = "Scanning";
+                        displayText = SCANNING_TEXT;
                     }
                 }
                 if(key == FIVE){
@@ -132,14 +135,14 @@ public class Main {
                         } else {
                             foundCard = collectionUtil.getCardFromName(foundCard.getCardName() + " (Leader)");
                         }
-                        displayText = foundCard.getUniqueDisplayName()+"? \n1(N)/2(H)/3(F)/4(HF) to add.";
+                        displayText = foundCard.getUniqueDisplayName()+OPTIONS_TEXT;
                         //if pressed twice this is null
                     }
                 }
                 if(key == ZERO){
                     System.out.println("Reset");
                     foundCard = null;
-                    displayText = "Scanning";
+                    displayText = SCANNING_TEXT;
                 }
                 if(key == S ){
                     System.out.println("Saving to csv");
@@ -149,9 +152,6 @@ public class Main {
                     collectionUtil.saveToCsv(currentCards);
                     foundCard = null;
                     displayText = "Saved to csv";
-                }
-                if(foundCard!=null){
-                    System.out.println(foundCard.getUniqueDisplayName());
                 }
 
 
