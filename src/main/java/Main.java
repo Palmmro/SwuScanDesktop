@@ -79,9 +79,9 @@ public class Main {
                     if(displayText.equals(SCANNING_TEXT)){
                         String recognizedText = performOCR(frame, tesseract);
                         if (!recognizedText.isEmpty()) {
-    //                        System.out.println("Recognized Text: " + recognizedText);
+                            System.out.println("Recognized Text: " + recognizedText);
                             List<Card> collection = collectionUtil.getCollectionCards();
-                                foundCard = TextValidator.findCard(recognizedText,collection);
+                                foundCard = TextMatcher.findCard(recognizedText,collection);
                                 if(foundCard != null){
                                     displayText = foundCard.getUniqueDisplayName()+OPTIONS_TEXT;
                                 }
