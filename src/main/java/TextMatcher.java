@@ -5,30 +5,30 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class TextMatcher {
-    public static Card findCard(String scannedText, List<Card> collection){
+    public static Card findCard(String scannedText, List<Card> collection) {
 
-        List<Card> longCollection = collection.stream().filter(c -> c.getCardName().length()>=8).sorted((Comparator.comparingInt(o -> -1*o.getCardName().length()))).collect(Collectors.toList());
-        List<Card> shortCollection = collection.stream().filter(c -> c.getCardName().length()<8).sorted((Comparator.comparingInt(o -> -1*o.getCardName().length()))).collect(Collectors.toList());
+        List<Card> longCollection = collection.stream().filter(c -> c.getCardName().length() >= 8).sorted((Comparator.comparingInt(o -> -1 * o.getCardName().length()))).collect(Collectors.toList());
+        List<Card> shortCollection = collection.stream().filter(c -> c.getCardName().length() < 8).sorted((Comparator.comparingInt(o -> -1 * o.getCardName().length()))).collect(Collectors.toList());
 
         Card exactMatchLong = findExactMatch(scannedText, longCollection);
-        if(exactMatchLong!=null){
+        if (exactMatchLong != null) {
             return exactMatchLong;
         }
 
-        Card closestMatchLong = findClosestMatch(scannedText,longCollection,3);
-        if(closestMatchLong != null){
+        Card closestMatchLong = findClosestMatch(scannedText, longCollection, 3);
+        if (closestMatchLong != null) {
             return closestMatchLong;
         }
 
-        Card exactMatchShort = findExactMatch(scannedText,shortCollection);
-        if(exactMatchShort!=null){
+        Card exactMatchShort = findExactMatch(scannedText, shortCollection);
+        if (exactMatchShort != null) {
             return exactMatchShort;
         }
-        return findClosestMatch(scannedText,shortCollection,0);
+        return findClosestMatch(scannedText, shortCollection, 0);
     }
 
-    private static Card findExactMatch(String scannedText, List<Card> collection){
-        for (Card card : collection){
+    private static Card findExactMatch(String scannedText, List<Card> collection) {
+        for (Card card : collection) {
 
             if (scannedText.strip().toLowerCase().contains(card.getCardName().strip().toLowerCase())) {
                 return card;
@@ -50,8 +50,10 @@ public class TextMatcher {
         for (int i = 0; i <= longString.length(); i++) {
 
             for (Card card : cards) {
-                String substring = longString.substring(i, Math.min(i + card.getCardName().length(),longString.length()));
-                int distance = levenshteinDistance.apply(substring.strip().toUpperCase().replace('Q','O'), card.getCardName().strip().toUpperCase().replace('Q','O'));
+                String substring = longString.substring(i, Math.min(i + card.getCardName().length(), longString.length()));
+                int distance = levenshteinDistance.apply(substring.strip().toUpperCase()
+                        .replace('Q', 'O'), card.getCardName().strip().toUpperCase()
+                        .replace('Q', 'O'));
                 if (distance < smallestDistance) {
                     smallestDistance = distance;
                     closestMatch = card;
@@ -75,9 +77,9 @@ public class TextMatcher {
 
         CollectionUtil collectionUtil = new CollectionUtil();
         List<Card> collection = collectionUtil.getCollectionCards();
-        List<Card> longCollection = collection.stream().filter(c -> c.getCardName().length()>=8).sorted((Comparator.comparingInt(o -> -1*o.getCardName().length()))).collect(Collectors.toList());
+        List<Card> longCollection = collection.stream().filter(c -> c.getCardName().length() >= 8).sorted((Comparator.comparingInt(o -> -1 * o.getCardName().length()))).collect(Collectors.toList());
 
-        Card closestMatch = findClosestMatch(longString, longCollection,3);
+        Card closestMatch = findClosestMatch(longString, longCollection, 3);
         System.out.println("Closest match: " + (closestMatch != null ? closestMatch.getUniqueDisplayName() : "No close match found"));
     }
 }
