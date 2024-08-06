@@ -1,0 +1,9 @@
+Install:
+
+* Java - https://learn.microsoft.com/en-us/java/openjdk/download#openjdk-21
+* Maven - https://phoenixnap.com/kb/install-maven-windows
+* Tesseract-OCR - https://github.com/UB-Mannheim/tesseract/wiki
+
+
+Build: mvn clean install
+Run: mvn exec:java

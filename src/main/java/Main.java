@@ -6,6 +6,7 @@ import org.opencv.core.MatOfByte;
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
+import org.opencv.highgui.ImageWindow;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.highgui.HighGui;
 import org.opencv.videoio.VideoCapture;
@@ -44,10 +45,6 @@ public class Main {
         // Open a connection to the webcam (usually device 0)
         VideoCapture capture = new VideoCapture(1);
 
-        // Set the resolution to 1920x1080 (or whatever the webcam supports)
-//        capture.set(3, 1920); // Set width
-//        capture.set(4, 1080); // Set height
-
         if (!capture.isOpened()) {
             System.out.println("Error: Could not open video capture.");
             return;
@@ -61,7 +58,9 @@ public class Main {
         String displayText = SCANNING_TEXT;
         Card foundCard = null;
 
-        while (true) {
+        boolean shouldRun = true;
+
+        while (shouldRun) {
             // Read a frame from the webcam
             if (capture.read(frame)) {
                 // Perform OCR every second
@@ -72,33 +71,22 @@ public class Main {
                 HighGui.imshow("Webcam", frame);
 
 
-
                 if (HighGui.waitKey(500) == 'q') {
                     break;
                 } else {
                     if(displayText.equals(SCANNING_TEXT)){
                         String recognizedText = performOCR(frame, tesseract);
                         if (!recognizedText.isEmpty()) {
-//                            System.out.println("Recognized Text: " + recognizedText);
                             List<Card> collection = collectionUtil.getCollectionCards();
                                 foundCard = TextMatcher.findCard(recognizedText,collection);
                                 if(foundCard != null){
                                     displayText = foundCard.getUniqueDisplayName()+OPTIONS_TEXT;
                                 }
-    //                        for (String card : collection){
-    //
-    //                            if (recognizedText.toLowerCase().contains(card.toLowerCase())) {
-    //                                displayText = card+"? \n1(N)/2(H)/3(F)/4(HF) to add.";
-    //                                cardName = card;
-    //
-    //                            }
-    //                        }
                         }
                     }
                 }
 
                 var key = HighGui.pressedKey;
-//                System.out.println(key);
                 if(key == ONE && foundCard != null){
                     System.out.println("Added regular "+foundCard.getUniqueDisplayName()+" to csv");
                     saveCard(foundCard, false);
@@ -151,29 +139,31 @@ public class Main {
                     }
                     collectionUtil.saveToCsv(currentCards);
                     foundCard = null;
-                    displayText = "Saved to csv";
+                    displayText = "Saved to csv (0 to scan again)";
                 }
-
 
             } else {
                 System.out.println("Error: Could not read frame.");
                 break;
             }
+            shouldRun = ((ImageWindow) HighGui.windows.values().toArray()[0]).frame.isVisible();
+
         }
+        System.out.println("outside while");
 
         // Release the capture and close all HighGui windows
         capture.release();
         HighGui.destroyAllWindows();
+        System.exit(0);
     }
 
-    private static void saveCard(Card card, boolean isFoil){
-//        Card card = collectionUtil.getCardFromName(cardName);
 
+
+    private static void saveCard(Card card, boolean isFoil){
         currentCards.add(new Card(card.getSet(),card.getCardName(),card.getCardNumber(),1,isFoil));
 
     }
     private static boolean saveHyperspaceCard(Card card, boolean isFoil){
-//        Card card = collectionUtil.getHyperspaceCardFromName(cardName);
         if(card == null){
             System.out.println("No hyperspace available for card");
             return false;
@@ -182,9 +172,6 @@ public class Main {
         return true;
 
     }
-
-
-
 
     private static String performOCR(Mat frame, ITesseract tesseract) {
         try {
