@@ -69,17 +69,4 @@ public class TextMatcher {
         }
     }
 
-    public static void main(String[] args) {
-        String longString = "(4 OUTLAND TIE VANGUARD\n" +
-                "<\n" +
-                "Mma |\n" +
-                "cS wa | fe";
-
-        CollectionUtil collectionUtil = new CollectionUtil();
-        List<Card> collection = collectionUtil.getCollectionCards();
-        List<Card> longCollection = collection.stream().filter(c -> c.getCardName().length() >= 8).sorted((Comparator.comparingInt(o -> -1 * o.getCardName().length()))).collect(Collectors.toList());
-
-        Card closestMatch = findClosestMatch(longString, longCollection, 3);
-        System.out.println("Closest match: " + (closestMatch != null ? closestMatch.getUniqueDisplayName() : "No close match found"));
-    }
 }
