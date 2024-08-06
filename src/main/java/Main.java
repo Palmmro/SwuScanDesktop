@@ -60,6 +60,7 @@ public class Main {
 
         boolean shouldRun = true;
 
+        System.out.println("Started SWU scan");
         while (shouldRun) {
             // Read a frame from the webcam
             if (capture.read(frame)) {
