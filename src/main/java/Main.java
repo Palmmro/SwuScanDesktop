@@ -20,6 +20,8 @@ import java.util.List;
 import javax.imageio.ImageIO;
 
 public class Main {
+    private static final int WEBCAM_ID = 1;
+
     private static final int ZERO = 96;
     private static final int ONE = 97;
     private static final int TWO = 98;
@@ -43,7 +45,7 @@ public class Main {
 
     public static void main(String[] args) throws InterruptedException {
         // Open a connection to the webcam (usually device 0)
-        VideoCapture capture = new VideoCapture(1);
+        VideoCapture capture = new VideoCapture(WEBCAM_ID);
 
         if (!capture.isOpened()) {
             System.out.println("Error: Could not open video capture.");
