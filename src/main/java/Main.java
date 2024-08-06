@@ -149,7 +149,6 @@ public class Main {
             shouldRun = ((ImageWindow) HighGui.windows.values().toArray()[0]).frame.isVisible();
 
         }
-        System.out.println("outside while");
 
         // Release the capture and close all HighGui windows
         capture.release();
