@@ -30,7 +30,7 @@ public class Main {
     private static final int FIVE = 101;
     private static final int S = 83;
 
-    private static final String SCANNING_TEXT = "Scanning (S to save)";
+    private static final String SCANNING_TEXT = "Scanning...";
     private static final String OPTIONS_TEXT = "? \n1(N)/2(H)/3(F)/4(HF) to add. \n0 to reset. 5 to swap unit/leader.";
 
     private static final List<Card> currentCards = new ArrayList<>();
@@ -111,6 +111,7 @@ public class Main {
                 }
                 if(key == FOUR && foundCard != null){
                     if(saveHyperspaceCard(foundCard, true)) {
+                        saveCard(foundCard, false);
                         System.out.println("Added hyperspace foil " + foundCard.getUniqueDisplayName() + " to csv");
                         foundCard = null;
                         displayText = SCANNING_TEXT;
@@ -135,15 +136,6 @@ public class Main {
                     foundCard = null;
                     displayText = SCANNING_TEXT;
                 }
-                if(key == S ){
-                    System.out.println("Saving to csv");
-                    for(Card card: currentCards){
-                        System.out.println(card);
-                    }
-                    collectionUtil.saveToCsv(currentCards);
-                    foundCard = null;
-                    displayText = "Saved to csv (0 to scan again)";
-                }
 
             } else {
                 System.out.println("Error: Could not read frame.");
@@ -163,14 +155,17 @@ public class Main {
 
     private static void saveCard(Card card, boolean isFoil){
         currentCards.add(new Card(card.getSet(),card.getCardName(),card.getCardNumber(),1,isFoil));
+        collectionUtil.saveToCsv(currentCards);
 
     }
     private static boolean saveHyperspaceCard(Card card, boolean isFoil){
-        if(card == null){
+        Card hyperspaceCard = collectionUtil.getHyperspaceCardFromName(card.getCardName());
+        if(hyperspaceCard == null){
             System.out.println("No hyperspace available for card");
             return false;
         }
-        currentCards.add(new Card(card.getSet(),card.getCardName(),card.getCardNumber(),1,isFoil));
+        currentCards.add(new Card(hyperspaceCard.getSet(),hyperspaceCard.getCardName(),hyperspaceCard.getCardNumber(),1,isFoil));
+        collectionUtil.saveToCsv(currentCards);
         return true;
 
     }
