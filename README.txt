@@ -19,3 +19,10 @@ If webcam not working try changing WEBCAM_ID in main to something else
 
 Build: mvn clean install
 Run: mvn exec:java
+
+----------------
+How to get new collection of cards:
+* Go to swudb.com (account with empty collection)
+* Create a file like twi_full.csv with number from 001 - 600
+* Import bulk in swudb
+* Download human readable collection
