@@ -77,61 +77,72 @@ public class Main {
                 if (HighGui.waitKey(500) == 'q') {
                     break;
                 } else {
-                    if(displayText.equals(SCANNING_TEXT)){
+                    if (displayText.equals(SCANNING_TEXT)) {
                         String recognizedText = performOCR(frame, tesseract);
                         if (!recognizedText.isEmpty()) {
                             List<Card> collection = collectionUtil.getCollectionCards();
-                                foundCard = TextMatcher.findCard(recognizedText,collection);
-                                if(foundCard != null){
-                                    displayText = foundCard.getUniqueDisplayName()+OPTIONS_TEXT;
-                                }
+                            foundCard = TextMatcher.findCard(recognizedText, collection);
+                            if (foundCard != null) {
+                                displayText = foundCard.getUniqueDisplayName() + OPTIONS_TEXT;
+                            }
                         }
                     }
                 }
 
                 var key = HighGui.pressedKey;
-                if(key == ONE && foundCard != null){
-                    System.out.println("Added regular "+foundCard.getUniqueDisplayName()+" to csv");
+                if (key == ONE && foundCard != null) {
+                    System.out.println("Added regular " + foundCard.getUniqueDisplayName() + " to csv");
                     saveCard(foundCard, false);
                     foundCard = null;
                     displayText = SCANNING_TEXT;
                 }
-                if(key == TWO && foundCard != null){
-                    if(saveHyperspaceCard(foundCard, false)){
-                        System.out.println("Added hyperspace "+foundCard.getUniqueDisplayName()+" to csv");
+                if (key == TWO && foundCard != null) {
+                    if (saveHyperspaceCard(foundCard, false)) {
+                        System.out.println("Added hyperspace " + foundCard.getUniqueDisplayName() + " to csv");
                         foundCard = null;
                         displayText = SCANNING_TEXT;
                     }
                 }
-                if(key == THREE && foundCard != null){
-                    System.out.println("Added foil "+foundCard.getUniqueDisplayName()+" to csv");
+                if (key == THREE && foundCard != null) {
+                    System.out.println("Added foil " + foundCard.getUniqueDisplayName() + " to csv");
                     saveCard(foundCard, true);
                     foundCard = null;
                     displayText = SCANNING_TEXT;
                 }
-                if(key == FOUR && foundCard != null){
-                    if(saveHyperspaceCard(foundCard, true)) {
+                if (key == FOUR && foundCard != null) {
+                    if (saveHyperspaceCard(foundCard, true)) {
                         saveCard(foundCard, false);
                         System.out.println("Added hyperspace foil " + foundCard.getUniqueDisplayName() + " to csv");
                         foundCard = null;
                         displayText = SCANNING_TEXT;
                     }
                 }
-                if(key == FIVE){
-                    if(foundCard != null && !foundCard.getCardName().equals(foundCard.getUniqueDisplayName())){
+                if (key == FIVE) {
+                    if (foundCard != null && !foundCard.getCardName().equals(foundCard.getUniqueDisplayName())) {
 
-                        //find other card
-                        boolean isExistingLeader = foundCard.getUniqueDisplayName().contains("(Leader)");
-                        if(isExistingLeader){
-                            foundCard = collectionUtil.getCardFromName(foundCard.getCardName() + " (Unit)");
+                        if (foundCard.getUniqueDisplayName().contains("(Leader)") || foundCard.getUniqueDisplayName().contains("(Unit)")) {
+
+                            //find other card
+                            boolean isExistingLeader = foundCard.getUniqueDisplayName().contains("(Leader)");
+                            if (isExistingLeader) {
+                                foundCard = collectionUtil.getCardFromName(foundCard.getCardName() + " (Unit)");
+                            } else {
+                                foundCard = collectionUtil.getCardFromName(foundCard.getCardName() + " (Leader)");
+                            }
                         } else {
-                            foundCard = collectionUtil.getCardFromName(foundCard.getCardName() + " (Leader)");
+
+                            if (foundCard.getUniqueDisplayName().contains("(Villain)")) {
+                                foundCard = collectionUtil.getCardFromName(foundCard.getCardName() + " (Dbl red)");
+                            } else {
+                                foundCard = collectionUtil.getCardFromName(foundCard.getCardName() + "(Villain)");
+                            }
                         }
-                        displayText = foundCard.getUniqueDisplayName()+OPTIONS_TEXT;
-                        //if pressed twice this is null
+                        if(foundCard != null){
+                            displayText = foundCard.getUniqueDisplayName() + OPTIONS_TEXT;
+                        }
                     }
                 }
-                if(key == ZERO){
+                if (key == ZERO) {
                     System.out.println("Reset");
                     foundCard = null;
                     displayText = SCANNING_TEXT;
@@ -152,19 +163,19 @@ public class Main {
     }
 
 
-
-    private static void saveCard(Card card, boolean isFoil){
-        currentCards.add(new Card(card.getSet(),card.getCardName(),card.getCardNumber(),1,isFoil));
+    private static void saveCard(Card card, boolean isFoil) {
+        currentCards.add(new Card(card.getSet(), card.getCardName(), card.getCardNumber(), 1, isFoil));
         collectionUtil.saveToCsv(currentCards);
 
     }
-    private static boolean saveHyperspaceCard(Card card, boolean isFoil){
+
+    private static boolean saveHyperspaceCard(Card card, boolean isFoil) {
         Card hyperspaceCard = collectionUtil.getHyperspaceCardFromName(card.getCardName());
-        if(hyperspaceCard == null){
+        if (hyperspaceCard == null) {
             System.out.println("No hyperspace available for card");
             return false;
         }
-        currentCards.add(new Card(hyperspaceCard.getSet(),hyperspaceCard.getCardName(),hyperspaceCard.getCardNumber(),1,isFoil));
+        currentCards.add(new Card(hyperspaceCard.getSet(), hyperspaceCard.getCardName(), hyperspaceCard.getCardNumber(), 1, isFoil));
         collectionUtil.saveToCsv(currentCards);
         return true;
 
