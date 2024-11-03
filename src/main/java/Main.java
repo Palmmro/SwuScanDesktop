@@ -127,8 +127,9 @@ public class Main {
                         } else {
                             foundCard = collectionUtil.getCardFromName(foundCard.getCardName() + " (Leader)");
                         }
-                        displayText = foundCard.getUniqueDisplayName()+OPTIONS_TEXT;
-                        //if pressed twice this is null
+                        if(foundCard != null){
+                            displayText = foundCard.getUniqueDisplayName()+OPTIONS_TEXT;
+                        }
                     }
                 }
                 if(key == ZERO){
