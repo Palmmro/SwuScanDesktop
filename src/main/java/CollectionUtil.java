@@ -51,16 +51,10 @@ public class CollectionUtil {
                     //Gar Saxon,SHD,001,Normal,Common,3,False
                     if(variantType.equals("Normal")){
                         Card cardToAdd = new Card(cardSet,cardName,cardNumber,1,Boolean.parseBoolean(isFoil));
-                        var cardNameNoSpace = cardName.replaceAll("\\s+$", "");
-                        Card existingCard = fullCollectionMapNormal.get(cardNameNoSpace);
-                        if(existingCard != null){
-                            if(cardName.charAt(cardName.length()-1)==' '){
-                                existingCard.setUniqueDisplayName(existingCard.getCardName() + " (Villain)");
-                                cardToAdd.setUniqueDisplayName(cardToAdd.getCardName() + "(Dbl red)");
-                            } else {
-                                existingCard.setUniqueDisplayName(existingCard.getCardName() + " (Leader)");
-                                cardToAdd.setUniqueDisplayName(cardToAdd.getCardName() + " (Unit)");
-                            }
+                        Card existingCard = fullCollectionMapNormal.get(cardName);
+                        if(fullCollectionMapNormal.get(cardName) != null){
+                            existingCard.setUniqueDisplayName(existingCard.getCardName() + " (Leader)");
+                            cardToAdd.setUniqueDisplayName(cardToAdd.getCardName() + " (Unit)");
                             fullCollectionMapNormal.put(existingCard.getUniqueDisplayName(), existingCard);
                         }
                         fullCollectionMapNormal.put(cardToAdd.getUniqueDisplayName(), cardToAdd);
