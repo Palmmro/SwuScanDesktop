@@ -182,7 +182,7 @@ Wartime Profiteering,TWI,188,Normal,Uncommon,1,False
 Unnatural Life,TWI,189,Normal,Rare,1,False
 On the Doorstep,TWI,190,Normal,Common,1,False
 Wolf Pack Escort,TWI,191,Normal,Common,1,False
-Padm? Amidala,TWI,192,Normal,Uncommon,1,False
+Padme Amidala,TWI,192,Normal,Uncommon,1,False
 R2-D2,TWI,193,Normal,Uncommon,1,False
 Ahsoka Tano,TWI,194,Normal,Legendary,1,False
 Sabine Wren,TWI,195,Normal,Rare,1,False
@@ -253,7 +253,7 @@ Yoda,TWI,261,Showcase,Rare,1,True
 Count Dooku,TWI,262,Showcase,Common,1,True
 Wat Tambor,TWI,263,Showcase,Rare,1,True
 Captain Rex,TWI,264,Showcase,Rare,1,True
-Padm? Amidala,TWI,265,Showcase,Common,1,True
+Padme Amidala,TWI,265,Showcase,Common,1,True
 Maul,TWI,266,Showcase,Common,1,True
 Pre Vizsla,TWI,267,Showcase,Rare,1,True
 Ahsoka Tano,TWI,268,Showcase,Special,1,True
@@ -270,7 +270,7 @@ Yoda,TWI,279,Hyperspace,Rare,1,False
 Count Dooku,TWI,280,Hyperspace,Common,1,False
 Wat Tambor,TWI,281,Hyperspace,Rare,1,False
 Captain Rex,TWI,282,Hyperspace,Rare,1,False
-Padm? Amidala,TWI,283,Hyperspace,Common,1,False
+Padme Amidala,TWI,283,Hyperspace,Common,1,False
 Maul,TWI,284,Hyperspace,Common,1,False
 Pre Vizsla,TWI,285,Hyperspace,Rare,1,False
 Anakin Skywalker,TWI,287,Hyperspace,Common,1,False
@@ -349,7 +349,7 @@ Echo,TWI,362,Hyperspace,Uncommon,1,False
 Republic Tactical Officer,TWI,363,Hyperspace,Common,1,False
 Admiral Yularen,TWI,364,Hyperspace,Rare,1,False
 Advanced Recon Commando,TWI,365,Hyperspace,Common,1,False
-Shaak Ti,TWI,366,Normal,Uncommon,1,False
+Shaak Ti,TWI,366,Hyperspace,Uncommon,1,False
 Pelta Supply Frigate,TWI,367,Hyperspace,Common,1,False
 Aayla Secura,TWI,368,Hyperspace,Legendary,1,False
 Republic Defense Carrier,TWI,369,Hyperspace,Uncommon,1,False
@@ -437,7 +437,7 @@ Wartime Profiteering,TWI,453,Hyperspace,Uncommon,1,False
 Unnatural Life,TWI,454,Hyperspace,Rare,1,False
 On the Doorstep,TWI,455,Hyperspace,Common,1,False
 Wolf Pack Escort,TWI,456,Hyperspace,Common,1,False
-Padm? Amidala,TWI,457,Hyperspace,Uncommon,1,False
+Padme Amidala,TWI,457,Hyperspace,Uncommon,1,False
 R2-D2,TWI,458,Hyperspace,Uncommon,1,False
 Ahsoka Tano,TWI,459,Hyperspace,Legendary,1,False
 Sabine Wren,TWI,460,Hyperspace,Rare,1,False
