@@ -78,10 +78,10 @@ public class Main {
                     break;
                 } else {
                     if(displayText.equals(SCANNING_TEXT)){
-                        String recognizedText = performOCR(frame, tesseract);
-                        if (!recognizedText.isEmpty()) {
+                        String recognizedCardName = ImageMatcher.findBestMatch(frame, "src/main/resources/images");
+                        if (!recognizedCardName.isEmpty()) {
                             List<Card> collection = collectionUtil.getCollectionCards();
-                                foundCard = TextMatcher.findCard(recognizedText,collection);
+                                foundCard = TextMatcher.findCard(recognizedCardName,collection);
                                 if(foundCard != null){
                                     displayText = foundCard.getUniqueDisplayName()+OPTIONS_TEXT;
                                 }
