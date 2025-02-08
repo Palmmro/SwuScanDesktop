@@ -20,7 +20,7 @@ public class ImageMatcher {
             return "No Match";
         }
 
-        ORB orb = ORB.create();
+        ORB orb = ORB.create(1000);
         MatOfKeyPoint keypointsFrame = new MatOfKeyPoint();
         Mat descriptorsFrame = new Mat();
         orb.detectAndCompute(frame, new Mat(), keypointsFrame, descriptorsFrame);
