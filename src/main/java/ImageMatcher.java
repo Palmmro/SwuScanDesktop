@@ -60,23 +60,33 @@ public class ImageMatcher {
         }
 
         System.out.println("Matching Features...");
-        System.out.println("Descriptor 1 - Size: " + descriptors1.size() + ", Type: " + descriptors1.type());
-        System.out.println("Descriptor 2 - Size: " + descriptors2.size() + ", Type: " + descriptors2.type());
 
         try {
-            BFMatcher matcher = BFMatcher.create(BFMatcher.BRUTEFORCE_HAMMING, true);
-            MatOfDMatch matches = new MatOfDMatch();
-            matcher.match(descriptors1, descriptors2, matches);
+            BFMatcher matcher = BFMatcher.create(BFMatcher.BRUTEFORCE_HAMMING);
+            List<MatOfDMatch> knnMatches = new ArrayList<>();
+            matcher.knnMatch(descriptors1, descriptors2, knnMatches, 2); // Get 2 best matches
 
-            System.out.println("Total Matches: " + matches.rows());
-            return matches.rows();
+            // Apply Lowe’s Ratio Test
+            double ratioThreshold = 0.75;
+            int goodMatches = 0;
+            for (MatOfDMatch matOfDMatch : knnMatches) {
+                if (matOfDMatch.rows() > 1) {
+                    DMatch[] matches = matOfDMatch.toArray();
+                    if (matches[0].distance < ratioThreshold * matches[1].distance) {
+                        goodMatches++;
+                    }
+                }
+            }
+
+            System.out.println("Good Matches: " + goodMatches);
+            return goodMatches;
         } catch (Exception e) {
             System.out.println("Error during feature matching: " + e.getMessage());
             e.printStackTrace();
             return 0;
         }
-
     }
+
 
 
 
