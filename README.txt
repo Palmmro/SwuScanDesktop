@@ -4,6 +4,9 @@ Will create a CSV file at src/main/resources/output_collection.csv that can be u
 Install:
 
 * Java - https://learn.microsoft.com/en-us/java/openjdk/download#openjdk-21
+* Python
+* pip install beautifulsoup4
+* pip install requests
 * Maven - https://phoenixnap.com/kb/install-maven-windows
 * Tesseract-OCR - https://github.com/UB-Mannheim/tesseract/wiki
     Make sure to install to "C:/Program Files/Tesseract-OCR" (or update the code)
