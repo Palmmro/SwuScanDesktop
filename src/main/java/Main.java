@@ -29,6 +29,10 @@ public class Main {
     private static final int THREE = 99;
     private static final int FOUR = 100;
     private static final int FIVE = 101;
+    private static final int SIX = 102;
+    private static final int SEVEN = 103;
+    private static final int EIGHT = 104;
+    private static final int NINE = 105;
     private static final int S = 83;
 
     private static final String SCANNING_TEXT = "Scanning...";
@@ -37,6 +41,7 @@ public class Main {
     private static final List<Card> currentCards = new ArrayList<>();
 
     private static final CollectionUtil collectionUtil = new CollectionUtil();
+    private static final String BULK_TEXT = "Add how many cards?";
 
 
     static {
@@ -78,60 +83,104 @@ public class Main {
                 if (HighGui.waitKey(500) == 'q') {
                     break;
                 } else {
-                    if(displayText.equals(SCANNING_TEXT)){
+                    if (displayText.equals(SCANNING_TEXT)) {
                         var starttime = System.currentTimeMillis();
-                        foundCard = ImageMatcher.findBestMatchParallel(frame, "src/main/resources/images/"+SET);
-                        System.out.println("Time taken: "+(System.currentTimeMillis()-starttime));
-                        if(foundCard != null){
-                            displayText = foundCard.getUniqueDisplayName()+OPTIONS_TEXT;
+                        foundCard = ImageMatcher.findBestMatchParallel(frame, "src/main/resources/images/" + SET);
+                        System.out.println("Time taken: " + (System.currentTimeMillis() - starttime));
+                        if (foundCard != null) {
+                            displayText = foundCard.getUniqueDisplayName() + OPTIONS_TEXT;
                         }
                     }
                 }
 
                 var key = HighGui.pressedKey;
-                if(key == ONE && foundCard != null){
-                    System.out.println("Added regular "+foundCard.getUniqueDisplayName()+" to csv");
-                    saveCard(foundCard, false);
+                if (key == ONE && foundCard != null) {
+                    System.out.println("Added regular " + foundCard.getUniqueDisplayName() + " to csv");
+                    saveCard(foundCard, false, 1);
                     foundCard = null;
                     displayText = SCANNING_TEXT;
                 }
-                if(key == TWO && foundCard != null){
-                    if(saveHyperspaceCard(foundCard, false)){
-                        System.out.println("Added hyperspace "+foundCard.getUniqueDisplayName()+" to csv");
+                if (key == TWO && foundCard != null) {
+                    if (displayText.equals(BULK_TEXT)) {
+                        System.out.println("Added regular " + foundCard.getUniqueDisplayName() + " to csv");
+                        saveCard(foundCard, false, 2);
+                        foundCard = null;
+                        displayText = SCANNING_TEXT;
+                    } else if (saveHyperspaceCard(foundCard, false)) {
+                        System.out.println("Added hyperspace " + foundCard.getUniqueDisplayName() + " to csv");
                         foundCard = null;
                         displayText = SCANNING_TEXT;
                     }
                 }
-                if(key == THREE && foundCard != null){
-                    System.out.println("Added foil "+foundCard.getUniqueDisplayName()+" to csv");
-                    saveCard(foundCard, true);
-                    foundCard = null;
-                    displayText = SCANNING_TEXT;
+                if (key == THREE && foundCard != null) {
+                    if (displayText.equals(BULK_TEXT)) {
+                        System.out.println("Added regular " + foundCard.getUniqueDisplayName() + " to csv");
+                        saveCard(foundCard, false, 3);
+                        foundCard = null;
+                        displayText = SCANNING_TEXT;
+                    } else {
+                        System.out.println("Added foil " + foundCard.getUniqueDisplayName() + " to csv");
+                        saveCard(foundCard, true, 1);
+                        foundCard = null;
+                        displayText = SCANNING_TEXT;
+                    }
                 }
-                if(key == FOUR && foundCard != null){
-                    if(saveHyperspaceCard(foundCard, true)) {
-                        saveCard(foundCard, false);
+                if (key == FOUR && foundCard != null) {
+                    if (displayText.equals(BULK_TEXT)) {
+                        System.out.println("Added regular " + foundCard.getUniqueDisplayName() + " to csv");
+                        saveCard(foundCard, false, 4);
+                        foundCard = null;
+                        displayText = SCANNING_TEXT;
+                    } else if (saveHyperspaceCard(foundCard, true)) {
+                        saveCard(foundCard, false, 1);
                         System.out.println("Added hyperspace foil " + foundCard.getUniqueDisplayName() + " to csv");
                         foundCard = null;
                         displayText = SCANNING_TEXT;
                     }
                 }
-//                if(key == FIVE){
-//                    if(foundCard != null && !foundCard.getCardName().equals(foundCard.getUniqueDisplayName())){
-//
-//                        //find other card
-//                        boolean isExistingLeader = foundCard.getUniqueDisplayName().contains("(Leader)");
-//                        if(isExistingLeader){
-//                            foundCard = collectionUtil.getCardFromName(foundCard.getCardName() + " (Unit)");
-//                        } else {
-//                            foundCard = collectionUtil.getCardFromName(foundCard.getCardName() + " (Leader)");
-//                        }
-//                        if(foundCard != null){
-//                            displayText = foundCard.getUniqueDisplayName()+OPTIONS_TEXT;
-//                        }
-//                    }
-//                }
-                if(key == ZERO){
+                if (key == FIVE && foundCard != null) {
+                    if (displayText.equals(BULK_TEXT)) {
+                        System.out.println("Added regular " + foundCard.getUniqueDisplayName() + " to csv");
+                        saveCard(foundCard, false, 5);
+                        foundCard = null;
+                        displayText = SCANNING_TEXT;
+                    } else {
+                        displayText = BULK_TEXT;
+                    }
+                }
+                if (key == SIX && foundCard != null) {
+                    if (displayText.equals(BULK_TEXT)) {
+                        System.out.println("Added regular " + foundCard.getUniqueDisplayName() + " to csv");
+                        saveCard(foundCard, false, 6);
+                        foundCard = null;
+                        displayText = SCANNING_TEXT;
+                    }
+                }
+                if (key == SEVEN && foundCard != null) {
+                    if (displayText.equals(BULK_TEXT)) {
+                        System.out.println("Added regular " + foundCard.getUniqueDisplayName() + " to csv");
+                        saveCard(foundCard, false, 7);
+                        foundCard = null;
+                        displayText = SCANNING_TEXT;
+                    }
+                }
+                if (key == EIGHT && foundCard != null) {
+                    if (displayText.equals(BULK_TEXT)) {
+                        System.out.println("Added regular " + foundCard.getUniqueDisplayName() + " to csv");
+                        saveCard(foundCard, false, 8);
+                        foundCard = null;
+                        displayText = SCANNING_TEXT;
+                    }
+                }
+                if (key == NINE && foundCard != null) {
+                    if (displayText.equals(BULK_TEXT)) {
+                        System.out.println("Added regular " + foundCard.getUniqueDisplayName() + " to csv");
+                        saveCard(foundCard, false, 9);
+                        foundCard = null;
+                        displayText = SCANNING_TEXT;
+                    }
+                }
+                if (key == ZERO) {
                     System.out.println("Reset");
                     foundCard = null;
                     displayText = SCANNING_TEXT;
@@ -152,19 +201,19 @@ public class Main {
     }
 
 
-
-    private static void saveCard(Card card, boolean isFoil){
-        currentCards.add(new Card(card.getSet(),card.getCardName(),card.getCardNumber(),1,isFoil));
+    private static void saveCard(Card card, boolean isFoil, int count) {
+        currentCards.add(new Card(card.getSet(), card.getCardName(), card.getCardNumber(), count, isFoil));
         collectionUtil.saveToCsv(currentCards);
 
     }
-    private static boolean saveHyperspaceCard(Card card, boolean isFoil){
+
+    private static boolean saveHyperspaceCard(Card card, boolean isFoil) {
         Card hyperspaceCard = collectionUtil.getHyperspaceCardFromName(card.getCardName());
-        if(hyperspaceCard == null){
+        if (hyperspaceCard == null) {
             System.out.println("No hyperspace available for card");
             return false;
         }
-        currentCards.add(new Card(hyperspaceCard.getSet(),hyperspaceCard.getCardName(),hyperspaceCard.getCardNumber(),1,isFoil));
+        currentCards.add(new Card(hyperspaceCard.getSet(), hyperspaceCard.getCardName(), hyperspaceCard.getCardNumber(), 1, isFoil));
         collectionUtil.saveToCsv(currentCards);
         return true;
 
