@@ -78,7 +78,9 @@ public class Main {
                     break;
                 } else {
                     if(displayText.equals(SCANNING_TEXT)){
-                        foundCard = ImageMatcher.findBestMatch(frame, "src/main/resources/images/SOR");
+                        var starttime = System.currentTimeMillis();
+                        foundCard = ImageMatcher.findBestMatchParallel(frame, "src/main/resources/images/SOR");
+                        System.out.println("Time taken: "+(System.currentTimeMillis()-starttime));
                         if(foundCard != null){
                             displayText = foundCard.getUniqueDisplayName()+OPTIONS_TEXT;
                         }
