@@ -15,6 +15,7 @@ import org.opencv.imgproc.Imgproc;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import javax.imageio.ImageIO;
@@ -42,7 +43,9 @@ public class Main {
 
     private static final CollectionUtil collectionUtil = new CollectionUtil();
     private static final String BULK_TEXT = "Add how many cards?";
+    private static String tempDisplayText = "Added X cards.";
 
+    private static Instant timeToDisplay = Instant.MIN;
 
     static {
         // Load the OpenCV native library
@@ -76,6 +79,10 @@ public class Main {
                 // Add the display text to the frame with a black box behind it
                 addTextToFrame(frame, displayText);
 
+                if(timeToDisplay.isAfter(Instant.now())){
+                    addTextToFrame(frame, tempDisplayText, 10, 60, 0.75, 1);
+                }
+
                 // Display the frame using HighGui
                 HighGui.imshow("Webcam", frame);
 
@@ -95,31 +102,31 @@ public class Main {
 
                 var key = HighGui.pressedKey;
                 if (key == ONE && foundCard != null) {
-                    System.out.println("Added regular " + foundCard.getUniqueDisplayName() + " to csv");
+                    logTempText("Added regular " + foundCard.getUniqueDisplayName() + " to csv");
                     saveCard(foundCard, false, 1);
                     foundCard = null;
                     displayText = SCANNING_TEXT;
                 }
                 if (key == TWO && foundCard != null) {
                     if (displayText.equals(BULK_TEXT)) {
-                        System.out.println("Added regular " + foundCard.getUniqueDisplayName() + " to csv");
+                        logTempText("Added 2 regular " + foundCard.getUniqueDisplayName() + " to csv");
                         saveCard(foundCard, false, 2);
                         foundCard = null;
                         displayText = SCANNING_TEXT;
                     } else if (saveHyperspaceCard(foundCard, false)) {
-                        System.out.println("Added hyperspace " + foundCard.getUniqueDisplayName() + " to csv");
+                        logTempText("Added hyperspace " + foundCard.getUniqueDisplayName() + " to csv");
                         foundCard = null;
                         displayText = SCANNING_TEXT;
                     }
                 }
                 if (key == THREE && foundCard != null) {
                     if (displayText.equals(BULK_TEXT)) {
-                        System.out.println("Added regular " + foundCard.getUniqueDisplayName() + " to csv");
+                        logTempText("Added 3 regular " + foundCard.getUniqueDisplayName() + " to csv");
                         saveCard(foundCard, false, 3);
                         foundCard = null;
                         displayText = SCANNING_TEXT;
                     } else {
-                        System.out.println("Added foil " + foundCard.getUniqueDisplayName() + " to csv");
+                        logTempText("Added foil " + foundCard.getUniqueDisplayName() + " to csv");
                         saveCard(foundCard, true, 1);
                         foundCard = null;
                         displayText = SCANNING_TEXT;
@@ -127,20 +134,20 @@ public class Main {
                 }
                 if (key == FOUR && foundCard != null) {
                     if (displayText.equals(BULK_TEXT)) {
-                        System.out.println("Added regular " + foundCard.getUniqueDisplayName() + " to csv");
+                        logTempText("Added 4 regular " + foundCard.getUniqueDisplayName() + " to csv");
                         saveCard(foundCard, false, 4);
                         foundCard = null;
                         displayText = SCANNING_TEXT;
                     } else if (saveHyperspaceCard(foundCard, true)) {
+                        logTempText("Added hyperspace foil " + foundCard.getUniqueDisplayName() + " to csv");
                         saveCard(foundCard, false, 1);
-                        System.out.println("Added hyperspace foil " + foundCard.getUniqueDisplayName() + " to csv");
                         foundCard = null;
                         displayText = SCANNING_TEXT;
                     }
                 }
                 if (key == FIVE && foundCard != null) {
                     if (displayText.equals(BULK_TEXT)) {
-                        System.out.println("Added regular " + foundCard.getUniqueDisplayName() + " to csv");
+                        logTempText("Added 5 regular " + foundCard.getUniqueDisplayName() + " to csv");
                         saveCard(foundCard, false, 5);
                         foundCard = null;
                         displayText = SCANNING_TEXT;
@@ -150,7 +157,7 @@ public class Main {
                 }
                 if (key == SIX && foundCard != null) {
                     if (displayText.equals(BULK_TEXT)) {
-                        System.out.println("Added regular " + foundCard.getUniqueDisplayName() + " to csv");
+                        logTempText("Added 6 regular " + foundCard.getUniqueDisplayName() + " to csv");
                         saveCard(foundCard, false, 6);
                         foundCard = null;
                         displayText = SCANNING_TEXT;
@@ -158,7 +165,7 @@ public class Main {
                 }
                 if (key == SEVEN && foundCard != null) {
                     if (displayText.equals(BULK_TEXT)) {
-                        System.out.println("Added regular " + foundCard.getUniqueDisplayName() + " to csv");
+                        logTempText("Added 7 regular " + foundCard.getUniqueDisplayName() + " to csv");
                         saveCard(foundCard, false, 7);
                         foundCard = null;
                         displayText = SCANNING_TEXT;
@@ -166,7 +173,7 @@ public class Main {
                 }
                 if (key == EIGHT && foundCard != null) {
                     if (displayText.equals(BULK_TEXT)) {
-                        System.out.println("Added regular " + foundCard.getUniqueDisplayName() + " to csv");
+                        logTempText("Added 8 regular " + foundCard.getUniqueDisplayName() + " to csv");
                         saveCard(foundCard, false, 8);
                         foundCard = null;
                         displayText = SCANNING_TEXT;
@@ -174,7 +181,7 @@ public class Main {
                 }
                 if (key == NINE && foundCard != null) {
                     if (displayText.equals(BULK_TEXT)) {
-                        System.out.println("Added regular " + foundCard.getUniqueDisplayName() + " to csv");
+                        logTempText("Added 9 regular " + foundCard.getUniqueDisplayName() + " to csv");
                         saveCard(foundCard, false, 9);
                         foundCard = null;
                         displayText = SCANNING_TEXT;
@@ -200,6 +207,10 @@ public class Main {
         System.exit(0);
     }
 
+    private static void logTempText(String text) {
+        timeToDisplay = Instant.now().plusSeconds(3);
+        tempDisplayText = text;
+    }
 
     private static void saveCard(Card card, boolean isFoil, int count) {
         currentCards.add(new Card(card.getSet(), card.getCardName(), card.getCardNumber(), count, isFoil));
@@ -239,11 +250,12 @@ public class Main {
     }
 
     private static void addTextToFrame(Mat frame, String text) {
+        addTextToFrame(frame, text, 10, frame.rows()-50, 1.0, 2);
+    }
+    private static void addTextToFrame(Mat frame, String text, int x, int y, double fontScale, int thickness) {
         int fontFace = 0;
-        double fontScale = 1.0;
-        int thickness = 2;
         int[] baseLine = new int[1];
-        Point textOrg = new Point(10, frame.rows() - 50);
+        Point textOrg = new Point(x, y);
 
         // Split the text into lines
         String[] lines = text.split("\n");
@@ -252,15 +264,16 @@ public class Main {
         double maxWidth = 0;
         int totalHeight = 0;
         int lineSpacing = 30; // Additional space between lines
+        int hSpace = 8;
 
         for (String line : lines) {
             Size textSize = Imgproc.getTextSize(line, fontFace, fontScale, thickness, baseLine);
-            maxWidth = Math.max(maxWidth, textSize.width);
+            maxWidth = Math.max(maxWidth, textSize.width)+hSpace;
             totalHeight += textSize.height + lineSpacing; // Adding space between lines
         }
 
         // Draw the black rectangle for all lines
-        Imgproc.rectangle(frame, new Point(textOrg.x, textOrg.y - totalHeight),
+        Imgproc.rectangle(frame, new Point(textOrg.x-hSpace, textOrg.y - totalHeight),
                 new Point(textOrg.x + maxWidth, textOrg.y + baseLine[0]),
                 new Scalar(0, 0, 0), -1);
 
