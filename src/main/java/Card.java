@@ -7,7 +7,7 @@ public class Card {
     private String cardName;
     private String cardNumber;
     private int count;
-    private boolean isFoil;
+    private Boolean isFoil;
     private String uniqueDisplayName;
 
     public Card(String set, String cardName, String cardNumber, int count, boolean isFoil){
@@ -18,9 +18,20 @@ public class Card {
         this.isFoil = isFoil;
         this.uniqueDisplayName = cardName;
     }
+    public Card(String set, String cardName, String cardNumber){
+        this.set = set;
+        this.cardName = cardName;
+        this.cardNumber = cardNumber;
+        this.count = -1;
+        this.isFoil = null;
+        this.uniqueDisplayName = cardName;
+    }
     public Card(){
         this.cardName = "";
         this.uniqueDisplayName = "";
+    }
+    public boolean isFoil(){
+        return isFoil;
     }
 
     @Override

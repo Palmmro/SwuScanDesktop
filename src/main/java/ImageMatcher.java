@@ -11,13 +11,13 @@ import java.util.List;
 
 public class ImageMatcher {
 
-    public static String findBestMatch(Mat frame, String folderPath) {
+    public static Card findBestMatch(Mat frame, String folderPath) {
         File folder = new File(folderPath);
         File[] imageFiles = folder.listFiles((dir, name) -> name.toLowerCase().endsWith(".jpg"));
 
         if (imageFiles == null) {
             System.out.println("No images found in directory.");
-            return "No Match";
+            return null;
         }
 
         ORB orb = ORB.create(1000);
@@ -27,7 +27,8 @@ public class ImageMatcher {
 
         System.out.println("Frame - Keypoints: " + keypointsFrame.size() + ", Descriptors: " + descriptorsFrame.size() + ", Type: " + descriptorsFrame.type());
 
-        String bestMatch = "No Match";
+//        String bestMatch = "No Match";
+        Card bestMatch = null;
         int maxMatches = 0;
 
         for (File imageFile : imageFiles) {
@@ -45,10 +46,17 @@ public class ImageMatcher {
             System.out.println("Matches found: " + matches);
 
             if (matches > maxMatches) {
+
                 maxMatches = matches;
-                bestMatch = imageFile.getName();
+
+                String name = imageFile.getName().substring(0,imageFile.getName().lastIndexOf("_")).replace("_"," ");
+                String cardNumber = imageFile.getName().substring(imageFile.getName().lastIndexOf("_")+1,imageFile.getName().lastIndexOf("."));
+                String set = folderPath.substring(folderPath.lastIndexOf('/')+1);
+                bestMatch = new Card(set,name,cardNumber);
+//                bestMatch = imageFile.getName();
             }
         }
+
 
         return bestMatch;
     }

@@ -4,10 +4,10 @@ import time
 from pathlib import Path
 
 
-URL="https://swudb.com/images/cards/SHD/"
-CSV="src/main/resources/human_readable_full_collection_shd.csv"
+URL="https://swudb.com/images/cards/SOR/"
+CSV="src/main/resources/human_readable_full_collection_sor.csv"
 # CSV="human_readable_test.csv"
-DELAY=0.7
+DELAY=0.9
 
 def get_image():
     df = pd.read_csv(CSV)
@@ -23,7 +23,7 @@ def get_image():
         url = URL + number +".png"
         set_string = URL[-4:]
         # set_string = "TEST/"
-        savepath = "src/main/resources/images/"+ set_string + row["CardName"].replace(" ","_")
+        savepath = "src/main/resources/images/"+ set_string + row["CardName"].replace(" ","_") + "_" + number
         Path("src/main/resources/images/"+ set_string).mkdir(parents=True, exist_ok=True)
         filenr = 1
         while Path(savepath+".jpg").is_file():

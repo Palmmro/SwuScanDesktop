@@ -31,7 +31,7 @@ public class Main {
     private static final int S = 83;
 
     private static final String SCANNING_TEXT = "Scanning...";
-    private static final String OPTIONS_TEXT = "? \n1(N)/2(H)/3(F)/4(HF) to add. \n0 to reset. 5 to swap unit/leader.";
+    private static final String OPTIONS_TEXT = "? \n1(N)/2(H)/3(F)/4(HF) to add. \n0 to reset. 5 to add bulk";
 
     private static final List<Card> currentCards = new ArrayList<>();
 
@@ -78,13 +78,9 @@ public class Main {
                     break;
                 } else {
                     if(displayText.equals(SCANNING_TEXT)){
-                        String recognizedCardName = ImageMatcher.findBestMatch(frame, "src/main/resources/images");
-                        if (!recognizedCardName.isEmpty()) {
-                            List<Card> collection = collectionUtil.getCollectionCards();
-                                foundCard = TextMatcher.findCard(recognizedCardName,collection);
-                                if(foundCard != null){
-                                    displayText = foundCard.getUniqueDisplayName()+OPTIONS_TEXT;
-                                }
+                        foundCard = ImageMatcher.findBestMatch(frame, "src/main/resources/images/SOR");
+                        if(foundCard != null){
+                            displayText = foundCard.getUniqueDisplayName()+OPTIONS_TEXT;
                         }
                     }
                 }
@@ -117,21 +113,21 @@ public class Main {
                         displayText = SCANNING_TEXT;
                     }
                 }
-                if(key == FIVE){
-                    if(foundCard != null && !foundCard.getCardName().equals(foundCard.getUniqueDisplayName())){
-
-                        //find other card
-                        boolean isExistingLeader = foundCard.getUniqueDisplayName().contains("(Leader)");
-                        if(isExistingLeader){
-                            foundCard = collectionUtil.getCardFromName(foundCard.getCardName() + " (Unit)");
-                        } else {
-                            foundCard = collectionUtil.getCardFromName(foundCard.getCardName() + " (Leader)");
-                        }
-                        if(foundCard != null){
-                            displayText = foundCard.getUniqueDisplayName()+OPTIONS_TEXT;
-                        }
-                    }
-                }
+//                if(key == FIVE){
+//                    if(foundCard != null && !foundCard.getCardName().equals(foundCard.getUniqueDisplayName())){
+//
+//                        //find other card
+//                        boolean isExistingLeader = foundCard.getUniqueDisplayName().contains("(Leader)");
+//                        if(isExistingLeader){
+//                            foundCard = collectionUtil.getCardFromName(foundCard.getCardName() + " (Unit)");
+//                        } else {
+//                            foundCard = collectionUtil.getCardFromName(foundCard.getCardName() + " (Leader)");
+//                        }
+//                        if(foundCard != null){
+//                            displayText = foundCard.getUniqueDisplayName()+OPTIONS_TEXT;
+//                        }
+//                    }
+//                }
                 if(key == ZERO){
                     System.out.println("Reset");
                     foundCard = null;
