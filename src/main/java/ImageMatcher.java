@@ -103,7 +103,9 @@ public class ImageMatcher {
 
         var results = Arrays.stream(imageFiles).parallel().map(img -> getMatchResult(img, orb, descriptorsFrame, folderPath));
 
-        return results.max(Comparator.comparingInt(MatchResult::getMatches)).orElse(new MatchResult()).card;
+        var matchResult = results.max(Comparator.comparingInt(MatchResult::getMatches)).orElse(new MatchResult());
+        System.out.println("Score: "+matchResult.matches);
+        return matchResult.card;
     }
 
     private static MatchResult getMatchResult(File imageFile, ORB orb, Mat descriptorsFrame, String folderPath){

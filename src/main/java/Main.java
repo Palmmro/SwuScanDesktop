@@ -21,6 +21,7 @@ import javax.imageio.ImageIO;
 
 public class Main {
     private static final int WEBCAM_ID = 1;
+    private static final String SET = "SHD";
 
     private static final int ZERO = 96;
     private static final int ONE = 97;
@@ -79,7 +80,7 @@ public class Main {
                 } else {
                     if(displayText.equals(SCANNING_TEXT)){
                         var starttime = System.currentTimeMillis();
-                        foundCard = ImageMatcher.findBestMatchParallel(frame, "src/main/resources/images/SOR");
+                        foundCard = ImageMatcher.findBestMatchParallel(frame, "src/main/resources/images/"+SET);
                         System.out.println("Time taken: "+(System.currentTimeMillis()-starttime));
                         if(foundCard != null){
                             displayText = foundCard.getUniqueDisplayName()+OPTIONS_TEXT;
