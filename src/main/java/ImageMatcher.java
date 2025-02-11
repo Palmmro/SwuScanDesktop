@@ -6,22 +6,24 @@ import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 public class ImageMatcher {
 
+    private static final HashMap<String, File[]> images = new HashMap<>();
     private static File[] imageFiles;
 
     public static Card findBestMatch(Mat frame, String folderPath) {
+        String set = folderPath.substring(folderPath.lastIndexOf("/")+1);
+        imageFiles = images.get(set);
+
         if(imageFiles == null){
             File folder = new File(folderPath);
             imageFiles = folder.listFiles((dir, name) -> name.toLowerCase().endsWith(".jpg"));
+            images.put(set,imageFiles);
         }
 
         if (imageFiles == null) {
@@ -59,7 +61,7 @@ public class ImageMatcher {
 
                 String name = imageFile.getName().substring(0,imageFile.getName().lastIndexOf("_")).replace("_"," ");
                 String cardNumber = imageFile.getName().substring(imageFile.getName().lastIndexOf("_")+1,imageFile.getName().lastIndexOf("."));
-                String set = folderPath.substring(folderPath.lastIndexOf('/')+1);
+//                String set = folderPath.substring(folderPath.lastIndexOf('/')+1);
                 bestMatch = new Card(set,name,cardNumber);
 //                bestMatch = imageFile.getName();
             }
@@ -84,9 +86,13 @@ public class ImageMatcher {
     }
 
     public static Card findBestMatchParallel(Mat frame, String folderPath) {
+        String set = folderPath.substring(folderPath.lastIndexOf("/")+1);
+        imageFiles = images.get(set);
+
         if(imageFiles == null){
             File folder = new File(folderPath);
             imageFiles = folder.listFiles((dir, name) -> name.toLowerCase().endsWith(".jpg"));
+            images.put(set,imageFiles);
         }
 
         if (imageFiles == null) {

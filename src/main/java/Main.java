@@ -22,7 +22,6 @@ import javax.imageio.ImageIO;
 
 public class Main {
     private static final int WEBCAM_ID = 1;
-    private static final String SET = "SOR";
 
     private static final int ZERO = 96;
     private static final int ONE = 97;
@@ -46,6 +45,9 @@ public class Main {
     private static String tempDisplayText = "Added X cards.";
 
     private static Instant timeToDisplay = Instant.MIN;
+    private static String[] sets = {"SOR", "SHD", "TWI"};
+
+    private static int setId = 0;
 
     static {
         // Load the OpenCV native library
@@ -77,11 +79,16 @@ public class Main {
             if (capture.read(frame)) {
                 // Perform OCR every second
                 // Add the display text to the frame with a black box behind it
+
+
                 addTextToFrame(frame, displayText);
 
                 if (timeToDisplay.isAfter(Instant.now())) {
                     addTextToFrame(frame, tempDisplayText, 10, 60, 0.75, 1);
+                } else {
+                    addTextToFrame(frame, "Set: "+sets[setId], 10, 90, 0.5, 1);
                 }
+
 
                 // Display the frame using HighGui
                 HighGui.imshow("Webcam", frame);
@@ -92,7 +99,7 @@ public class Main {
                 } else {
                     if (displayText.equals(SCANNING_TEXT)) {
                         var starttime = System.currentTimeMillis();
-                        foundCard = ImageMatcher.findBestMatchParallel(frame, "src/main/resources/images/" + SET);
+                        foundCard = ImageMatcher.findBestMatchParallel(frame, "src/main/resources/images/" + sets[setId]);
                         System.out.println("Time taken: " + (System.currentTimeMillis() - starttime));
                         if (foundCard != null) {
                             displayText = foundCard.getUniqueDisplayName() + OPTIONS_TEXT;
@@ -123,14 +130,12 @@ public class Main {
                     if (displayText.equals(BULK_TEXT)) {
                         logTempText("Added 3 regular " + foundCard.getUniqueDisplayName() + " to csv");
                         saveCard(foundCard, false, 3);
-                        foundCard = null;
-                        displayText = SCANNING_TEXT;
                     } else {
                         logTempText("Added foil " + foundCard.getUniqueDisplayName() + " to csv");
                         saveCard(foundCard, true, 1);
-                        foundCard = null;
-                        displayText = SCANNING_TEXT;
                     }
+                    foundCard = null;
+                    displayText = SCANNING_TEXT;
                 }
                 if (key == FOUR && foundCard != null) {
                     if (displayText.equals(BULK_TEXT)) {
@@ -192,6 +197,9 @@ public class Main {
                     foundCard = null;
                     displayText = SCANNING_TEXT;
                 }
+                if (key == S) {
+                    setId = (setId + 1) % (sets.length);
+                }
 
             } else {
                 System.out.println("Error: Could not read frame.");
@@ -219,33 +227,6 @@ public class Main {
 
     private static void saveCard(Card card, boolean isFoil, int count) {
         saveCard(card, false, isFoil, count);
-    }
-
-    private static String getHyperspaceNumber(String number, String set) {
-        if (set == "SOR") {
-            int offset;
-            int nr = -1;
-            if (number.startsWith("00")) {
-                nr = Integer.parseInt(number.substring(2));
-            } else if (number.startsWith("0")) {
-                nr = Integer.parseInt(number.substring(1));
-            } else {
-                nr = Integer.parseInt(number);
-            }
-
-            if(1 <= nr && nr <= 4) offset = 268;
-            if(nr == 5){offset = -1;}// LUKE GC23/1
-            if(6 <= nr && nr <= 9) offset = 267;
-            if(nr == 10){offset = -1;}// Vader GC23/2
-            if(11 <= nr && nr <= 52) offset = 267;
-            if(nr == 53){offset = -1;}// Luke's Lightsaber SOROP/08
-            if(54 <= nr && nr <= 84) offset = 267;
-
-
-
-            return "M";
-        }
-        return "";
     }
 
     private static boolean saveHyperspaceCard(Card card, boolean isFoil) {

@@ -69,7 +69,6 @@ public class CollectionUtil {
                     }
                 }
             }
-            System.out.println("test");
         } catch (IOException e) {
             e.printStackTrace();
         }
