@@ -1,1 +1,3 @@
 * Fix hyperspace
+* search all sets at once
+* Create deck based on existing (twin suns)

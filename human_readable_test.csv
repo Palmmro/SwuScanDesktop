@@ -1,5 +1,4 @@
 CardName,Set,CardNumber,VariantType,Rarity,Count,IsFoil
-Yoda,SOR,045,Normal,Uncommon,3,False
+Han Solo,SOR,017,Normal,Rare,3,False
+Han Solo,SOR,198,Normal,Rare,3,False
 Luke's Lightsaber,SOR,053,Normal,Special,3,False
-Luke's Lightsaber,SOR,053,Normal,Special,3,False
-Jedi Lightsaber,SOR,054,Normal,Rare,3,False

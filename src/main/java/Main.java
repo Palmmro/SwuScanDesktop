@@ -22,7 +22,7 @@ import javax.imageio.ImageIO;
 
 public class Main {
     private static final int WEBCAM_ID = 1;
-    private static final String SET = "SHD";
+    private static final String SET = "SOR";
 
     private static final int ZERO = 96;
     private static final int ONE = 97;
@@ -79,7 +79,7 @@ public class Main {
                 // Add the display text to the frame with a black box behind it
                 addTextToFrame(frame, displayText);
 
-                if(timeToDisplay.isAfter(Instant.now())){
+                if (timeToDisplay.isAfter(Instant.now())) {
                     addTextToFrame(frame, tempDisplayText, 10, 60, 0.75, 1);
                 }
 
@@ -212,10 +212,40 @@ public class Main {
         tempDisplayText = text;
     }
 
-    private static void saveCard(Card card, boolean isFoil, int count) {
+    private static void saveCard(Card card, boolean isHyperspace, boolean isFoil, int count) {
         currentCards.add(new Card(card.getSet(), card.getCardName(), card.getCardNumber(), count, isFoil));
         collectionUtil.saveToCsv(currentCards);
+    }
 
+    private static void saveCard(Card card, boolean isFoil, int count) {
+        saveCard(card, false, isFoil, count);
+    }
+
+    private static String getHyperspaceNumber(String number, String set) {
+        if (set == "SOR") {
+            int offset;
+            int nr = -1;
+            if (number.startsWith("00")) {
+                nr = Integer.parseInt(number.substring(2));
+            } else if (number.startsWith("0")) {
+                nr = Integer.parseInt(number.substring(1));
+            } else {
+                nr = Integer.parseInt(number);
+            }
+
+            if(1 <= nr && nr <= 4) offset = 268;
+            if(nr == 5){offset = -1;}// LUKE GC23/1
+            if(6 <= nr && nr <= 9) offset = 267;
+            if(nr == 10){offset = -1;}// Vader GC23/2
+            if(11 <= nr && nr <= 52) offset = 267;
+            if(nr == 53){offset = -1;}// Luke's Lightsaber SOROP/08
+            if(54 <= nr && nr <= 84) offset = 267;
+
+
+
+            return "M";
+        }
+        return "";
     }
 
     private static boolean saveHyperspaceCard(Card card, boolean isFoil) {
@@ -250,8 +280,9 @@ public class Main {
     }
 
     private static void addTextToFrame(Mat frame, String text) {
-        addTextToFrame(frame, text, 10, frame.rows()-50, 1.0, 2);
+        addTextToFrame(frame, text, 10, frame.rows() - 50, 1.0, 2);
     }
+
     private static void addTextToFrame(Mat frame, String text, int x, int y, double fontScale, int thickness) {
         int fontFace = 0;
         int[] baseLine = new int[1];
@@ -268,12 +299,12 @@ public class Main {
 
         for (String line : lines) {
             Size textSize = Imgproc.getTextSize(line, fontFace, fontScale, thickness, baseLine);
-            maxWidth = Math.max(maxWidth, textSize.width)+hSpace;
+            maxWidth = Math.max(maxWidth, textSize.width) + hSpace;
             totalHeight += textSize.height + lineSpacing; // Adding space between lines
         }
 
         // Draw the black rectangle for all lines
-        Imgproc.rectangle(frame, new Point(textOrg.x-hSpace, textOrg.y - totalHeight),
+        Imgproc.rectangle(frame, new Point(textOrg.x - hSpace, textOrg.y - totalHeight),
                 new Point(textOrg.x + maxWidth, textOrg.y + baseLine[0]),
                 new Scalar(0, 0, 0), -1);
 

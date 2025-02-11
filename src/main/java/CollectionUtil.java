@@ -44,13 +44,10 @@ public class CollectionUtil {
                     String cardSet = values[1];
                     String cardNumber = values[2];
                     String variantType = values[3];
-                    String rarity = values[4];
-                    String count= values[5];
-                    String isFoil= values[6];
                     //CardName,Set,CardNumber,VariantType,Rarity,Count,IsFoil
                     //Gar Saxon,SHD,001,Normal,Common,3,False
                     if(variantType.equals("Normal")){
-                        Card cardToAdd = new Card(cardSet,cardName,cardNumber,1,Boolean.parseBoolean(isFoil));
+                        Card cardToAdd = new Card(cardSet,cardName,cardNumber);
                         Card existingCard = fullCollectionMapNormal.get(cardName);
                         if(fullCollectionMapNormal.get(cardName) != null){
                             existingCard.setUniqueDisplayName(existingCard.getCardName() + " (Leader)");
@@ -59,12 +56,20 @@ public class CollectionUtil {
                         }
                         fullCollectionMapNormal.put(cardToAdd.getUniqueDisplayName(), cardToAdd);
                     } else if (variantType.equals("Showcase")){
-                        fullCollectionMapShowcase.put(cardName, new Card(cardSet,cardName,cardNumber,1,Boolean.parseBoolean(isFoil)));
+                        fullCollectionMapShowcase.put(cardName, new Card(cardSet,cardName,cardNumber));
                     } else if (variantType.equals("Hyperspace")){
-                        fullCollectionMapHyperspace.put(cardName, new Card(cardSet,cardName,cardNumber,1,Boolean.parseBoolean(isFoil)));
+                        Card cardToAdd = new Card(cardSet,cardName,cardNumber);
+                        Card existingCard = fullCollectionMapHyperspace.get(cardName);
+                        if(fullCollectionMapHyperspace.get(cardName) != null){
+                            existingCard.setUniqueDisplayName(existingCard.getCardName() + " (Leader)");
+                            cardToAdd.setUniqueDisplayName(cardToAdd.getCardName() + " (Unit)");
+                            fullCollectionMapHyperspace.put(existingCard.getUniqueDisplayName(), existingCard);
+                        }
+                        fullCollectionMapHyperspace.put(cardToAdd.getUniqueDisplayName(), cardToAdd);
                     }
                 }
             }
+            System.out.println("test");
         } catch (IOException e) {
             e.printStackTrace();
         }
