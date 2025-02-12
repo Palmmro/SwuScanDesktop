@@ -1,4 +1,5 @@
 import lombok.Getter;
+import org.apache.commons.lang3.ArrayUtils;
 import org.opencv.core.*;
 import org.opencv.features2d.BFMatcher;
 import org.opencv.features2d.ORB;
@@ -11,15 +12,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import static com.lowagie.text.pdf.BaseFont.RESOURCE_PATH;
-
 public class ImageMatcher {
 
     private static final HashMap<String, File[]> images = new HashMap<>();
 
     static {
-        Arrays.stream(Main.SETS).forEach(set -> {
-            File folder = new File(RESOURCE_PATH+set);
+        Main.PLAYABLE_SETS.forEach(set -> {
+            File folder = new File(Main.RESOURCE_PATH+set);
             images.put(set, folder.listFiles((dir, name) -> name.toLowerCase().endsWith(".jpg")));
         });
     }
@@ -93,17 +92,26 @@ public class ImageMatcher {
 
     }
 
-    public static Card findBestMatchParallel(Mat frame, String folderPath) {
-        String set = folderPath.substring(folderPath.lastIndexOf("/")+1);
-        File[] imageFiles = images.get(set);
+    public static Card findBestMatchParallel(Mat frame, String set) {
+        String folderPath = Main.RESOURCE_PATH + set;
+        List<File> imageFiles;
 
-        if(imageFiles == null){
-            File folder = new File(folderPath);
-            imageFiles = folder.listFiles((dir, name) -> name.toLowerCase().endsWith(".jpg"));
-            images.put(set, imageFiles);
+        if(Objects.equals(set, "ALL")){
+            imageFiles = Main.PLAYABLE_SETS.parallelStream()
+                    .map(s -> Arrays.stream(images.get(s)).toList())
+                    .flatMap(l -> l.parallelStream()).toList();
+
+        } else {
+            imageFiles = Arrays.stream(images.get(set)).toList();
         }
 
-        if (imageFiles == null) {
+//        if(imageFiles == null){
+//            File folder = new File(folderPath);
+//            imageFiles = folder.listFiles((dir, name) -> name.toLowerCase().endsWith(".jpg"));
+//            images.put(set, imageFiles);
+//        }
+
+        if (imageFiles.isEmpty()) {
             System.out.println("No images found in directory.");
             return null;
         }
@@ -115,7 +123,7 @@ public class ImageMatcher {
 
         System.out.println("Frame - Keypoints: " + keypointsFrame.size() + ", Descriptors: " + descriptorsFrame.size() + ", Type: " + descriptorsFrame.type());
 
-        var results = Arrays.stream(imageFiles).parallel().map(img -> getMatchResult(img, orb, descriptorsFrame, folderPath));
+        var results = imageFiles.stream().parallel().map(img -> getMatchResult(img, orb, descriptorsFrame, folderPath));
 
         var matchResult = results.max(Comparator.comparingInt(MatchResult::getMatches)).orElse(new MatchResult());
         System.out.println("Score: "+matchResult.matches);
@@ -196,7 +204,6 @@ public class ImageMatcher {
             return goodMatches;
         } catch (Exception e) {
             System.out.println("Error during feature matching: " + e.getMessage());
-            e.printStackTrace();
             return 0;
         }
     }

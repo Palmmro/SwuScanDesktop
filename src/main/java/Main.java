@@ -18,6 +18,8 @@ import java.io.InputStream;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 import javax.imageio.ImageIO;
 
 public class Main {
@@ -37,8 +39,10 @@ public class Main {
 
     private static final String SCANNING_TEXT = "Scanning...";
     private static final String OPTIONS_TEXT = "? \n1(N)/2(H)/3(F)/4(HF) to add. \n0 to reset. 5 to add bulk";
-    public static final String[] SETS = {"SOR", "SHD", "TWI"};
+    public static final List<String> SETS = List.of("ALL", "SOR", "SHD", "TWI");
 
+
+    public static final List<String> PLAYABLE_SETS = SETS.stream().filter(s -> !Objects.equals(s, "ALL")).toList();
     private static final List<Card> currentCards = new ArrayList<>();
 
     private static final CollectionUtil collectionUtil = new CollectionUtil();
@@ -87,7 +91,7 @@ public class Main {
                 if (timeToDisplay.isAfter(Instant.now())) {
                     addTextToFrame(frame, tempDisplayText, 10, 60, 0.75, 1);
                 } else {
-                    addTextToFrame(frame, "Set: "+ SETS[setId], 10, 90, 0.5, 1);
+                    addTextToFrame(frame, "Set: "+ SETS.get(setId), 10, 90, 0.5, 1);
                 }
 
 
@@ -100,7 +104,7 @@ public class Main {
                 } else {
                     if (displayText.equals(SCANNING_TEXT)) {
                         var starttime = System.currentTimeMillis();
-                        foundCard = ImageMatcher.findBestMatchParallel(frame, RESOURCE_PATH + SETS[setId]);
+                        foundCard = ImageMatcher.findBestMatchParallel(frame, SETS.get(setId));
                         System.out.println("Time taken: " + (System.currentTimeMillis() - starttime));
                         if (foundCard != null) {
                             displayText = foundCard.getUniqueDisplayName() + OPTIONS_TEXT;
@@ -199,7 +203,7 @@ public class Main {
                     displayText = SCANNING_TEXT;
                 }
                 if (key == S) {
-                    setId = (setId + 1) % (SETS.length);
+                    setId = (setId + 1) % (SETS.size());
                 }
 
             } else {
@@ -227,7 +231,7 @@ public class Main {
     }
 
     private static boolean saveHyperspaceCard(Card card, boolean isFoil) {
-        Card hyperspaceCard = collectionUtil.getHyperspaceCardFromName(card.getCardName(),SETS[setId]);
+        Card hyperspaceCard = collectionUtil.getHyperspaceCardFromName(card.getCardName(),SETS.get(setId));
         if (hyperspaceCard == null) {
             System.out.println("No hyperspace available for card");
             return false;

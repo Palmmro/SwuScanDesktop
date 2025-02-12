@@ -1,8 +1,6 @@
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class CollectionUtil {
 
@@ -19,7 +17,7 @@ public class CollectionUtil {
     private HashMap<String,HashMap<String,Card>> allCollectionmapHyperspace = new HashMap<>();
 
     public CollectionUtil(){
-        Arrays.stream(Main.SETS).forEach(set -> {
+        Main.PLAYABLE_SETS.forEach(set -> {
             List<HashMap<String, Card>> list = initCollection(COLLECTION_PATH+set.toLowerCase()+".csv");
             allCollectionmapNormal.put(set,list.get(0));
             allCollectionmapHyperspace.put(set,list.get(1));
