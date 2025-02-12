@@ -14,12 +14,16 @@ import java.util.concurrent.Future;
 
 public class ImageMatcher {
 
-    private static final HashMap<String, File[]> images = new HashMap<>();
+    private static final HashMap<String, List<File>> images = new HashMap<>();
 
     static {
         Main.PLAYABLE_SETS.forEach(set -> {
             File folder = new File(Main.RESOURCE_PATH+set);
-            images.put(set, folder.listFiles((dir, name) -> name.toLowerCase().endsWith(".jpg")));
+            File[] all = folder.listFiles((dir, name) -> name.toLowerCase().endsWith(".jpg"));
+            if(all == null){
+                throw new RuntimeException("Cannot find files");
+            }
+            images.put(set, Arrays.stream(all).toList());
         });
     }
 
@@ -95,16 +99,16 @@ public class ImageMatcher {
     public static Card findBestMatchParallel(Mat frame, String set) {
         String folderPath = Main.RESOURCE_PATH + set;
         List<File> imageFiles;
-
+    var start = System.currentTimeMillis();
         if(Objects.equals(set, "ALL")){
             imageFiles = Main.PLAYABLE_SETS.parallelStream()
-                    .map(s -> Arrays.stream(images.get(s)).toList())
-                    .flatMap(l -> l.parallelStream()).toList();
+                    .map(images::get)
+                    .flatMap(Collection::parallelStream).toList();
 
         } else {
-            imageFiles = Arrays.stream(images.get(set)).toList();
+            imageFiles = images.get(set);
         }
-
+        var end = System.currentTimeMillis();
 //        if(imageFiles == null){
 //            File folder = new File(folderPath);
 //            imageFiles = folder.listFiles((dir, name) -> name.toLowerCase().endsWith(".jpg"));
@@ -126,6 +130,7 @@ public class ImageMatcher {
         var results = imageFiles.stream().parallel().map(img -> getMatchResult(img, orb, descriptorsFrame, folderPath));
 
         var matchResult = results.max(Comparator.comparingInt(MatchResult::getMatches)).orElse(new MatchResult());
+        System.out.println("Time taken init: "+(end - start));
         System.out.println("Score: "+matchResult.matches);
         return matchResult.card;
     }

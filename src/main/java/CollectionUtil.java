@@ -104,7 +104,17 @@ public class CollectionUtil {
         return fullCollectionMapNormal.get(name);
     }
     public Card getHyperspaceCardFromName(String name, String set){
-        return allCollectionmapHyperspace.get(set).get(name);
+        if(set.equals("ALL")){
+            for(String s : Main.PLAYABLE_SETS){
+                var x = allCollectionmapHyperspace.get(s).get(name);
+                if(x!=null){
+                    return x;
+                }
+            }
+            return null;
+        } else {
+            return allCollectionmapHyperspace.get(set).get(name);
+        }
     }
     public Card getShowCaseCardFromName(String name){
         return fullCollectionMapShowcase.get(name);
