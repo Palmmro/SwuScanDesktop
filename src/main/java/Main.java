@@ -37,15 +37,16 @@ public class Main {
 
     private static final String SCANNING_TEXT = "Scanning...";
     private static final String OPTIONS_TEXT = "? \n1(N)/2(H)/3(F)/4(HF) to add. \n0 to reset. 5 to add bulk";
+    public static final String[] SETS = {"SOR", "SHD", "TWI"};
 
     private static final List<Card> currentCards = new ArrayList<>();
 
     private static final CollectionUtil collectionUtil = new CollectionUtil();
     private static final String BULK_TEXT = "Add how many cards?";
+    public static final String RESOURCE_PATH = "src/main/resources/images/";
     private static String tempDisplayText = "Added X cards.";
 
     private static Instant timeToDisplay = Instant.MIN;
-    private static String[] sets = {"SOR", "SHD", "TWI"};
 
     private static int setId = 0;
 
@@ -86,7 +87,7 @@ public class Main {
                 if (timeToDisplay.isAfter(Instant.now())) {
                     addTextToFrame(frame, tempDisplayText, 10, 60, 0.75, 1);
                 } else {
-                    addTextToFrame(frame, "Set: "+sets[setId], 10, 90, 0.5, 1);
+                    addTextToFrame(frame, "Set: "+ SETS[setId], 10, 90, 0.5, 1);
                 }
 
 
@@ -99,7 +100,7 @@ public class Main {
                 } else {
                     if (displayText.equals(SCANNING_TEXT)) {
                         var starttime = System.currentTimeMillis();
-                        foundCard = ImageMatcher.findBestMatchParallel(frame, "src/main/resources/images/" + sets[setId]);
+                        foundCard = ImageMatcher.findBestMatchParallel(frame, RESOURCE_PATH + SETS[setId]);
                         System.out.println("Time taken: " + (System.currentTimeMillis() - starttime));
                         if (foundCard != null) {
                             displayText = foundCard.getUniqueDisplayName() + OPTIONS_TEXT;
@@ -198,7 +199,7 @@ public class Main {
                     displayText = SCANNING_TEXT;
                 }
                 if (key == S) {
-                    setId = (setId + 1) % (sets.length);
+                    setId = (setId + 1) % (SETS.length);
                 }
 
             } else {
@@ -220,17 +221,13 @@ public class Main {
         tempDisplayText = text;
     }
 
-    private static void saveCard(Card card, boolean isHyperspace, boolean isFoil, int count) {
+    private static void saveCard(Card card, boolean isFoil, int count) {
         currentCards.add(new Card(card.getSet(), card.getCardName(), card.getCardNumber(), count, isFoil));
         collectionUtil.saveToCsv(currentCards);
     }
 
-    private static void saveCard(Card card, boolean isFoil, int count) {
-        saveCard(card, false, isFoil, count);
-    }
-
     private static boolean saveHyperspaceCard(Card card, boolean isFoil) {
-        Card hyperspaceCard = collectionUtil.getHyperspaceCardFromName(card.getCardName());
+        Card hyperspaceCard = collectionUtil.getHyperspaceCardFromName(card.getCardName(),SETS[setId]);
         if (hyperspaceCard == null) {
             System.out.println("No hyperspace available for card");
             return false;

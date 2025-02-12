@@ -1,11 +1,13 @@
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
 public class CollectionUtil {
 
     private static final String FULL_COLLECTION_PATH = "src/main/resources/human_readable_full_collection.csv";
+    private static final String COLLECTION_PATH = "src/main/resources/human_readable_full_collection_";
     private static final String OUTPUT_COLLECTION_PATH = "src/main/resources/output_collection.csv";
     private static final String csvSeparator = ",";
 
@@ -13,26 +15,26 @@ public class CollectionUtil {
     private final HashMap<String,Card> fullCollectionMapHyperspace = new HashMap<>();
     private final HashMap<String,Card> fullCollectionMapShowcase = new HashMap<>();
 
-//    public static void main(String[] args) {
-//        CollectionUtil collectionUtil = new CollectionUtil();
-//        List<Card> cards = new ArrayList<>();
-//        for(int i = 1; i <= 522; i++){
-//            String cardNumber = String.valueOf(i);
-//            String prefix = "";
-//            if(i<10){
-//                prefix = "00";
-//            } else if (i<100){
-//                prefix = "0";
-//            }
-//            cards.add(new Card("SHD","",prefix+cardNumber,1,false));
-//        }
-//        collectionUtil.saveToCsv(cards);
-//    }
+    private HashMap<String,HashMap<String,Card>> allCollectionmapNormal = new HashMap<>();
+    private HashMap<String,HashMap<String,Card>> allCollectionmapHyperspace = new HashMap<>();
 
     public CollectionUtil(){
+        Arrays.stream(Main.SETS).forEach(set -> {
+            List<HashMap<String, Card>> list = initCollection(COLLECTION_PATH+set.toLowerCase()+".csv");
+            allCollectionmapNormal.put(set,list.get(0));
+            allCollectionmapHyperspace.put(set,list.get(1));
+        });
+    }
+
+    private List<HashMap<String, Card>> initCollection(String path){
+        HashMap<String,Card> fullCollectionMapNormal = new HashMap<>();
+        HashMap<String,Card> fullCollectionMapHyperspace = new HashMap<>();
+
+
         //load full collection from membory
+
         String line = "";
-        try (BufferedReader br = new BufferedReader(new FileReader(FULL_COLLECTION_PATH))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
             br.readLine();
             while ((line = br.readLine()) != null) {
                 // Use comma as separator
@@ -55,8 +57,6 @@ public class CollectionUtil {
                             fullCollectionMapNormal.put(existingCard.getUniqueDisplayName(), existingCard);
                         }
                         fullCollectionMapNormal.put(cardToAdd.getUniqueDisplayName(), cardToAdd);
-                    } else if (variantType.equals("Showcase")){
-                        fullCollectionMapShowcase.put(cardName, new Card(cardSet,cardName,cardNumber));
                     } else if (variantType.equals("Hyperspace")){
                         Card cardToAdd = new Card(cardSet,cardName,cardNumber);
                         Card existingCard = fullCollectionMapHyperspace.get(cardName);
@@ -69,9 +69,11 @@ public class CollectionUtil {
                     }
                 }
             }
+            return List.of(fullCollectionMapNormal, fullCollectionMapHyperspace);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return null;
     }
 
     public void saveToCsv(List<Card> cards){
@@ -103,8 +105,8 @@ public class CollectionUtil {
     public Card getCardFromName(String name){
         return fullCollectionMapNormal.get(name);
     }
-    public Card getHyperspaceCardFromName(String name){
-        return fullCollectionMapHyperspace.get(name);
+    public Card getHyperspaceCardFromName(String name, String set){
+        return allCollectionmapHyperspace.get(set).get(name);
     }
     public Card getShowCaseCardFromName(String name){
         return fullCollectionMapShowcase.get(name);

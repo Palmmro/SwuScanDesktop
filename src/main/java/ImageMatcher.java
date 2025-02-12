@@ -11,63 +11,71 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import static com.lowagie.text.pdf.BaseFont.RESOURCE_PATH;
+
 public class ImageMatcher {
 
     private static final HashMap<String, File[]> images = new HashMap<>();
-    private static File[] imageFiles;
 
-    public static Card findBestMatch(Mat frame, String folderPath) {
-        String set = folderPath.substring(folderPath.lastIndexOf("/")+1);
-        imageFiles = images.get(set);
-
-        if(imageFiles == null){
-            File folder = new File(folderPath);
-            imageFiles = folder.listFiles((dir, name) -> name.toLowerCase().endsWith(".jpg"));
-            images.put(set,imageFiles);
-        }
-
-        if (imageFiles == null) {
-            System.out.println("No images found in directory.");
-            return null;
-        }
-
-        ORB orb = ORB.create(1000);
-        MatOfKeyPoint keypointsFrame = new MatOfKeyPoint();
-        Mat descriptorsFrame = new Mat();
-        orb.detectAndCompute(frame, new Mat(), keypointsFrame, descriptorsFrame);
-
-        System.out.println("Frame - Keypoints: " + keypointsFrame.size() + ", Descriptors: " + descriptorsFrame.size() + ", Type: " + descriptorsFrame.type());
-
-        Card bestMatch = null;
-        int maxMatches = 0;
-
-        for (File imageFile : imageFiles) {
-            Mat img = Imgcodecs.imread(imageFile.getAbsolutePath(), Imgcodecs.IMREAD_GRAYSCALE);
-            if (img.empty()) continue;
-
-            MatOfKeyPoint keypointsImg = new MatOfKeyPoint();
-            Mat descriptorsImg = new Mat();
-            orb.detectAndCompute(img, new Mat(), keypointsImg, descriptorsImg);
-
-            System.out.println("Comparing with: " + imageFile.getName());
-            System.out.println("Image - Keypoints: " + keypointsImg.size() + ", Descriptors: " + descriptorsImg.size() + ", Type: " + descriptorsImg.type());
-
-            int matches = matchFeatures(descriptorsFrame, descriptorsImg);
-            System.out.println("Matches found: " + matches);
-
-            if (matches > maxMatches) {
-
-                maxMatches = matches;
-
-                String name = imageFile.getName().substring(0,imageFile.getName().lastIndexOf("_")).replace("_"," ");
-                String cardNumber = imageFile.getName().substring(imageFile.getName().lastIndexOf("_")+1,imageFile.getName().lastIndexOf("."));
-//                String set = folderPath.substring(folderPath.lastIndexOf('/')+1);
-                bestMatch = new Card(set,name,cardNumber);
-//                bestMatch = imageFile.getName();
-            }
-        }
-        return bestMatch;
+    static {
+        Arrays.stream(Main.SETS).forEach(set -> {
+            File folder = new File(RESOURCE_PATH+set);
+            images.put(set, folder.listFiles((dir, name) -> name.toLowerCase().endsWith(".jpg")));
+        });
     }
+
+//    public static Card findBestMatch(Mat frame, String folderPath) {
+//        String set = folderPath.substring(folderPath.lastIndexOf("/")+1);
+//        imageFiles = images.get(set);
+//
+//        if(imageFiles == null){
+//            File folder = new File(folderPath);
+//            imageFiles = folder.listFiles((dir, name) -> name.toLowerCase().endsWith(".jpg"));
+//            images.put(set,imageFiles);
+//        }
+//
+//        if (imageFiles == null) {
+//            System.out.println("No images found in directory.");
+//            return null;
+//        }
+//
+//        ORB orb = ORB.create(1000);
+//        MatOfKeyPoint keypointsFrame = new MatOfKeyPoint();
+//        Mat descriptorsFrame = new Mat();
+//        orb.detectAndCompute(frame, new Mat(), keypointsFrame, descriptorsFrame);
+//
+//        System.out.println("Frame - Keypoints: " + keypointsFrame.size() + ", Descriptors: " + descriptorsFrame.size() + ", Type: " + descriptorsFrame.type());
+//
+//        Card bestMatch = null;
+//        int maxMatches = 0;
+//
+//        for (File imageFile : imageFiles) {
+//            Mat img = Imgcodecs.imread(imageFile.getAbsolutePath(), Imgcodecs.IMREAD_GRAYSCALE);
+//            if (img.empty()) continue;
+//
+//            MatOfKeyPoint keypointsImg = new MatOfKeyPoint();
+//            Mat descriptorsImg = new Mat();
+//            orb.detectAndCompute(img, new Mat(), keypointsImg, descriptorsImg);
+//
+//            System.out.println("Comparing with: " + imageFile.getName());
+//            System.out.println("Image - Keypoints: " + keypointsImg.size() + ", Descriptors: " + descriptorsImg.size() + ", Type: " + descriptorsImg.type());
+//
+//            int matches = matchFeatures(descriptorsFrame, descriptorsImg);
+//            System.out.println("Matches found: " + matches);
+//
+//            if (matches > maxMatches) {
+//
+//                maxMatches = matches;
+//
+//                String name = imageFile.getName().substring(0,imageFile.getName().lastIndexOf("_")).replace("_"," ");
+//                String cardNumber = imageFile.getName().substring(imageFile.getName().lastIndexOf("_")+1,imageFile.getName().lastIndexOf("."));
+////                String set = folderPath.substring(folderPath.lastIndexOf('/')+1);
+//                bestMatch = new Card(set,name,cardNumber);
+////                bestMatch = imageFile.getName();
+//            }
+//        }
+//        return bestMatch;
+//    }
 
     static class MatchResult {
         Card card;
@@ -87,12 +95,12 @@ public class ImageMatcher {
 
     public static Card findBestMatchParallel(Mat frame, String folderPath) {
         String set = folderPath.substring(folderPath.lastIndexOf("/")+1);
-        imageFiles = images.get(set);
+        File[] imageFiles = images.get(set);
 
         if(imageFiles == null){
             File folder = new File(folderPath);
             imageFiles = folder.listFiles((dir, name) -> name.toLowerCase().endsWith(".jpg"));
-            images.put(set,imageFiles);
+            images.put(set, imageFiles);
         }
 
         if (imageFiles == null) {
