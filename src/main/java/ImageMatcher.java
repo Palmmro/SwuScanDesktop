@@ -109,11 +109,6 @@ public class ImageMatcher {
             imageFiles = images.get(set);
         }
         var end = System.currentTimeMillis();
-//        if(imageFiles == null){
-//            File folder = new File(folderPath);
-//            imageFiles = folder.listFiles((dir, name) -> name.toLowerCase().endsWith(".jpg"));
-//            images.put(set, imageFiles);
-//        }
 
         if (imageFiles.isEmpty()) {
             System.out.println("No images found in directory.");

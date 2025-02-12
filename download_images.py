@@ -10,7 +10,7 @@ SET="SOR"
 URL="https://swudb.com/images/cards/"+SET+"/"
 CSV="src/main/resources/human_readable_full_collection_"+SET.lower()+".csv"
 # CSV="human_readable_test.csv"
-DELAY=0.9
+DELAY=0.5
 
 def get_image():
     df = pd.read_csv(CSV)
@@ -30,7 +30,6 @@ def get_image():
         name = row["CardName"].replace(" ","_")
         savepath = "src/main/resources/images/"+ set_string + row["CardName"].replace(" ","_")
         Path("src/main/resources/images/"+ set_string).mkdir(parents=True, exist_ok=True)
-        # filenr = 1
 
         matching_files = get_nr_matching_files(name, path)
         if len(matching_files) > 0 :
@@ -40,13 +39,6 @@ def get_image():
             old_name_end = matching_files[0][-8:]
             new_name = old_name_start + "_(Leader)" + old_name_end
             os.rename(path+matching_files[0], path+new_name)
-
-        # while Path(savepath+".jpg").is_file():
-        #     filenr = filenr + 1
-        #     savepath = savepath + "("+str(filenr)+")"
-        #     if filenr > 10:
-        #         print("Too many similar files")
-        #         break
 
         savepath = savepath + "_" + number
 
@@ -71,9 +63,8 @@ def resize_image(save_path):
         # Convert RGBA (with transparency) to RGB to save as JPEG
         if img.mode == "RGBA":
             img = img.convert("RGB")
-
+        img = img.convert('L')
         img.save(save_path, "JPEG", optimize=True, quality=quality)  # Save with compression
-
 
 def download_image(image_url, save_path):
     try:
