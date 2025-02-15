@@ -36,6 +36,8 @@ public class Main {
     private static final int EIGHT = 104;
     private static final int NINE = 105;
     private static final int S = 83;
+    private static final int D = 68;
+    private static final int A = 65;
 
     private static final String SCANNING_TEXT = "Scanning...";
     private static final String OPTIONS_TEXT = "? \n1(N)/2(H)/3(F)/4(HF) to add. \n0 to reset. 5 to add bulk";
@@ -111,6 +113,7 @@ public class Main {
                 }
 
                 var key = HighGui.pressedKey;
+                System.out.println(key);
                 if (key == ONE && foundCard != null) {
                     logTempText("Added regular " + foundCard.getUniqueDisplayName() + " to csv");
                     saveCard(foundCard, false, 1);
@@ -202,6 +205,9 @@ public class Main {
                 }
                 if (key == S) {
                     setId = (setId + 1) % (SETS.size());
+                }
+                if (key == A) {
+                    setId = SETS.indexOf("ALL");
                 }
 
             } else {
