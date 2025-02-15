@@ -43,8 +43,10 @@ public class Main {
     private static final String BULK_TEXT = "Add how many cards?";
     public static final String RESOURCE_PATH = "src/main/resources/images/";
     private static String tempDisplayText = "Added X cards.";
+    private static String debugText = "";
 
     private static Instant timeToDisplay = Instant.MIN;
+    private static boolean debugMode = false;
 
 
     static {
@@ -84,6 +86,12 @@ public class Main {
                 } else {
                     addTextToFrame(frame, "Set: "+ SETS.get(setId), 10, 90, 0.5, 1);
                 }
+                var key = HighGui.pressedKey;
+
+                if (debugMode) {
+                    debugText = "KeyId: "+key;
+                    addTextToFrame(frame, debugText, 200, 90, 0.75, 1);
+                }
 
 
                 // Display the frame using HighGui
@@ -103,7 +111,7 @@ public class Main {
                     }
                 }
 
-                var key = HighGui.pressedKey;
+
                 if (key == ONE && foundCard != null) {
                     logTempText("Added regular " + foundCard.getUniqueDisplayName() + " to csv");
                     saveCard(foundCard, false, 1);
@@ -198,6 +206,10 @@ public class Main {
                 }
                 if (key == A) {
                     setId = SETS.indexOf("ALL");
+                }
+                if (key == D) {
+                    debugMode = !debugMode;
+                    System.out.println("Toggle debug");
                 }
 
             } else {
