@@ -1,26 +1,17 @@
-import net.sourceforge.tess4j.ITesseract;
-import net.sourceforge.tess4j.Tesseract;
 import nu.pattern.OpenCV;
 import org.opencv.core.Mat;
-import org.opencv.core.MatOfByte;
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.highgui.ImageWindow;
-import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.highgui.HighGui;
 import org.opencv.videoio.VideoCapture;
 import org.opencv.imgproc.Imgproc;
 
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
-import javax.imageio.ImageIO;
 
 public class Main {
     private static final int WEBCAM_ID = 1;
@@ -103,9 +94,9 @@ public class Main {
                     break;
                 } else {
                     if (displayText.equals(SCANNING_TEXT)) {
-                        var starttime = System.currentTimeMillis();
+                        TimeMeasure.start("Search ALl Cards");
                         foundCard = ImageMatcher.findBestMatchParallel(frame, SETS.get(setId));
-                        System.out.println("Time taken: " + (System.currentTimeMillis() - starttime));
+                        TimeMeasure.end("Search ALl Cards");
                         if (foundCard != null) {
                             displayText = foundCard.getUniqueDisplayName() + OPTIONS_TEXT;
                         }
@@ -113,7 +104,6 @@ public class Main {
                 }
 
                 var key = HighGui.pressedKey;
-                System.out.println(key);
                 if (key == ONE && foundCard != null) {
                     logTempText("Added regular " + foundCard.getUniqueDisplayName() + " to csv");
                     saveCard(foundCard, false, 1);

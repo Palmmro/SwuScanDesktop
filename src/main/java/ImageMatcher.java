@@ -118,7 +118,6 @@ public class ImageMatcher {
     public static Card findBestMatchParallel(Mat frame, String set) {
         String folderPath = Main.RESOURCE_PATH + set;
         List<File> imageFiles;
-    var start = System.currentTimeMillis();
         if(Objects.equals(set, "ALL")){
             imageFiles = Main.PLAYABLE_SETS.parallelStream()
                     .map(images::get)
@@ -127,7 +126,6 @@ public class ImageMatcher {
         } else {
             imageFiles = images.get(set);
         }
-        var end = System.currentTimeMillis();
 
         if (imageFiles.isEmpty()) {
             System.out.println("No images found in directory.");
@@ -139,12 +137,9 @@ public class ImageMatcher {
         Mat descriptorsFrame = new Mat();
         orb.detectAndCompute(frame, new Mat(), keypointsFrame, descriptorsFrame);
 
-        System.out.println("Frame - Keypoints: " + keypointsFrame.size() + ", Descriptors: " + descriptorsFrame.size() + ", Type: " + descriptorsFrame.type());
-
         var results = imageFiles.stream().parallel().map(img -> getMatchResult(img, orb, descriptorsFrame, folderPath));
 
         var matchResult = results.max(Comparator.comparingInt(MatchResult::getMatches)).orElse(new MatchResult());
-        System.out.println("Time taken init: "+(end - start));
         System.out.println("Score: "+matchResult.matches);
         return matchResult.card;
     }
@@ -160,6 +155,7 @@ public class ImageMatcher {
         if (img.empty()) {
             return new MatchResult(new Card(), -1);
         }
+        System.out.println("Did not contain");
 
         MatOfKeyPoint keypointsImg = new MatOfKeyPoint();
         descriptorsImg = new Mat();
@@ -185,8 +181,6 @@ public class ImageMatcher {
             return 0;
         }
 
-        System.out.println("Matching Features...");
-
         try {
             BFMatcher matcher = BFMatcher.create(BFMatcher.BRUTEFORCE_HAMMING);
             List<MatOfDMatch> knnMatches = new ArrayList<>();
@@ -203,8 +197,6 @@ public class ImageMatcher {
                     }
                 }
             }
-
-            System.out.println("Good Matches: " + goodMatches);
             return goodMatches;
         } catch (Exception e) {
             System.out.println("Error during feature matching: " + e.getMessage());
