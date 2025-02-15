@@ -23,7 +23,7 @@ public class ImageMatcher {
         precomputeDescriptors();
 
     }
-    public static void precomputeDescriptors() {
+    private static void precomputeDescriptors() {
         ORB orb = ORB.create(1000);
         for (String set : Main.PLAYABLE_SETS) {
             for (File imgFile : images.get(set)) {
