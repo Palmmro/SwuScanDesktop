@@ -153,28 +153,6 @@ public class ImageMatcher {
         return new MatchResult(card,matches);
     }
 
-    private static int matchFeaturesParallel(Mat descriptors1, Mat descriptors2) {
-        if (descriptors1.empty() || descriptors2.empty()) return 0;
-
-        BFMatcher matcher = BFMatcher.create(BFMatcher.BRUTEFORCE_HAMMING, true);
-        List<MatOfDMatch> knnMatches = new ArrayList<>();
-        matcher.knnMatch(descriptors1, descriptors2, knnMatches, 2);
-
-        double ratioThreshold = 0.65; // Make this stricter (was 0.75)
-        List<DMatch> goodMatches = new ArrayList<>();
-
-        for (MatOfDMatch mat : knnMatches) {
-            if (mat.toArray().length == 2) {
-                DMatch[] matches = mat.toArray();
-                if (matches[0].distance < ratioThreshold * matches[1].distance) {
-                    goodMatches.add(matches[0]);
-                }
-            }
-        }
-
-        return goodMatches.size();
-    }
-
     private static int matchFeatures(Mat descriptors1, Mat descriptors2) {
         if (descriptors1.empty() || descriptors2.empty()) {
             System.out.println("Error: One or both descriptor matrices are empty!");

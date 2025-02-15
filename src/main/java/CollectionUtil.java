@@ -75,7 +75,6 @@ public class CollectionUtil {
     }
 
     public void saveToCsv(List<Card> cards){
-//        List<String> stringList = List.of("First entry", "Second entry", "Third entry");
 
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(OUTPUT_COLLECTION_PATH))) {
             bw.write(String.join(csvSeparator,"Set","CardNumber","Count","IsFoil"));

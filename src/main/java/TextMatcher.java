@@ -1,5 +1,14 @@
+import net.sourceforge.tess4j.ITesseract;
+import net.sourceforge.tess4j.Tesseract;
 import org.apache.commons.text.similarity.LevenshteinDistance;
+import org.opencv.core.Mat;
+import org.opencv.core.MatOfByte;
+import org.opencv.imgcodecs.Imgcodecs;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,6 +34,25 @@ public class TextMatcher {
             return exactMatchShort;
         }
         return findClosestMatch(scannedText, shortCollection, 0);
+    }
+
+    private static String performOCR(Mat frame, ITesseract tesseract) {
+        try {
+            // Convert Mat to byte array
+            MatOfByte matOfByte = new MatOfByte();
+            Imgcodecs.imencode(".jpg", frame, matOfByte);
+            byte[] byteArray = matOfByte.toArray();
+
+            // Convert byte array to BufferedImage
+            InputStream in = new ByteArrayInputStream(byteArray);
+            BufferedImage bufferedImage = ImageIO.read(in);
+
+            // Perform OCR on the BufferedImage
+            return tesseract.doOCR(bufferedImage);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
     }
 
     private static Card findExactMatch(String scannedText, List<Card> collection) {

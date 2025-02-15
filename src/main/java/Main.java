@@ -39,6 +39,7 @@ public class Main {
 
     private static final String SCANNING_TEXT = "Scanning...";
     private static final String OPTIONS_TEXT = "? \n1(N)/2(H)/3(F)/4(HF) to add. \n0 to reset. 5 to add bulk";
+    private static int setId = 0;
     public static final List<String> SETS = List.of("ALL", "SOR", "SHD", "TWI");
 
 
@@ -52,7 +53,6 @@ public class Main {
 
     private static Instant timeToDisplay = Instant.MIN;
 
-    private static int setId = 0;
 
     static {
         // Load the OpenCV native library
@@ -68,9 +68,7 @@ public class Main {
             return;
         }
 
-        ITesseract tesseract = new Tesseract();
-        tesseract.setDatapath("C:/Program Files/Tesseract-OCR/tessdata");
-        tesseract.setTessVariable("user_defined_dpi", "70");
+
 
         Mat frame = new Mat();
         String displayText = SCANNING_TEXT;
@@ -242,24 +240,7 @@ public class Main {
 
     }
 
-    private static String performOCR(Mat frame, ITesseract tesseract) {
-        try {
-            // Convert Mat to byte array
-            MatOfByte matOfByte = new MatOfByte();
-            Imgcodecs.imencode(".jpg", frame, matOfByte);
-            byte[] byteArray = matOfByte.toArray();
 
-            // Convert byte array to BufferedImage
-            InputStream in = new ByteArrayInputStream(byteArray);
-            BufferedImage bufferedImage = ImageIO.read(in);
-
-            // Perform OCR on the BufferedImage
-            return tesseract.doOCR(bufferedImage);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "";
-        }
-    }
 
     private static void addTextToFrame(Mat frame, String text) {
         addTextToFrame(frame, text, 10, frame.rows() - 50, 1.0, 2);
