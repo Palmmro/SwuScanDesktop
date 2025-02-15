@@ -25,7 +25,26 @@ public class ImageMatcher {
             }
             images.put(set, Arrays.stream(all).toList());
         });
+        precomputeDescriptors();
+
     }
+    public static void precomputeDescriptors() {
+        ORB orb = ORB.create(1000);
+        for (String set : Main.PLAYABLE_SETS) {
+            for (File imgFile : images.get(set)) {
+                if (!DescriptorCache.contains(imgFile.getAbsolutePath())) {
+                    Mat img = Imgcodecs.imread(imgFile.getAbsolutePath(), Imgcodecs.IMREAD_GRAYSCALE);
+                    if (!img.empty()) {
+                        MatOfKeyPoint keypointsImg = new MatOfKeyPoint();
+                        Mat descriptorsImg = new Mat();
+                        orb.detectAndCompute(img, new Mat(), keypointsImg, descriptorsImg);
+                        DescriptorCache.addDescriptor(imgFile.getAbsolutePath(), descriptorsImg);
+                    }
+                }
+            }
+        }
+    }
+
 
 //    public static Card findBestMatch(Mat frame, String folderPath) {
 //        String set = folderPath.substring(folderPath.lastIndexOf("/")+1);
@@ -130,28 +149,35 @@ public class ImageMatcher {
         return matchResult.card;
     }
 
-    private static MatchResult getMatchResult(File imageFile, ORB orb, Mat descriptorsFrame, String folderPath){
-        Mat img = Imgcodecs.imread(imageFile.getAbsolutePath(), Imgcodecs.IMREAD_GRAYSCALE);
-        if (img.empty()){
-            return new MatchResult(new Card(),-1);
+    private static MatchResult getMatchResult(File imageFile, ORB orb, Mat descriptorsFrame, String folderPath) {
+    String filePath = imageFile.getAbsolutePath();
+
+    Mat descriptorsImg;
+    if (DescriptorCache.contains(filePath)) {
+        descriptorsImg = DescriptorCache.getDescriptor(filePath);
+    } else {
+        Mat img = Imgcodecs.imread(filePath, Imgcodecs.IMREAD_GRAYSCALE);
+        if (img.empty()) {
+            return new MatchResult(new Card(), -1);
         }
 
         MatOfKeyPoint keypointsImg = new MatOfKeyPoint();
-        Mat descriptorsImg = new Mat();
+        descriptorsImg = new Mat();
         orb.detectAndCompute(img, new Mat(), keypointsImg, descriptorsImg);
 
-        System.out.println("Comparing with: " + imageFile.getName());
-        System.out.println("Image - Keypoints: " + keypointsImg.size() + ", Descriptors: " + descriptorsImg.size() + ", Type: " + descriptorsImg.type());
-
-        int matches = matchFeatures(descriptorsFrame, descriptorsImg);
-
-        String name = imageFile.getName().substring(0,imageFile.getName().lastIndexOf("_")).replace("_"," ");
-        String cardNumber = imageFile.getName().substring(imageFile.getName().lastIndexOf("_")+1,imageFile.getName().lastIndexOf("."));
-        String set = folderPath.substring(folderPath.lastIndexOf('/')+1);
-        var card = new Card(set,name,cardNumber);
-
-        return new MatchResult(card,matches);
+        // Store descriptors in cache
+        DescriptorCache.addDescriptor(filePath, descriptorsImg);
     }
+
+    int matches = matchFeatures(descriptorsFrame, descriptorsImg);
+
+    String name = imageFile.getName().substring(0, imageFile.getName().lastIndexOf("_")).replace("_", " ");
+    String cardNumber = imageFile.getName().substring(imageFile.getName().lastIndexOf("_") + 1, imageFile.getName().lastIndexOf("."));
+    String set = folderPath.substring(folderPath.lastIndexOf('/') + 1);
+
+    return new MatchResult(new Card(set, name, cardNumber), matches);
+}
+
 
     private static int matchFeatures(Mat descriptors1, Mat descriptors2) {
         if (descriptors1.empty() || descriptors2.empty()) {
