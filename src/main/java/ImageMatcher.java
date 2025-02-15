@@ -13,9 +13,9 @@ public class ImageMatcher {
 
     static {
         Main.PLAYABLE_SETS.forEach(set -> {
-            File folder = new File(Main.RESOURCE_PATH+set);
+            File folder = new File(Main.RESOURCE_PATH + set);
             File[] all = folder.listFiles((dir, name) -> name.toLowerCase().endsWith(".jpg"));
-            if(all == null){
+            if (all == null) {
                 throw new RuntimeException("Cannot find files");
             }
             images.put(set, Arrays.stream(all).toList());
@@ -23,6 +23,7 @@ public class ImageMatcher {
         precomputeDescriptors();
 
     }
+
     private static void precomputeDescriptors() {
         ORB orb = ORB.create(1000);
         for (String set : Main.PLAYABLE_SETS) {
@@ -49,7 +50,8 @@ public class ImageMatcher {
             this.card = card;
             this.matches = matches;
         }
-        MatchResult(){
+
+        MatchResult() {
             this.card = null;
             matches = -1;
         }
@@ -59,7 +61,7 @@ public class ImageMatcher {
     public static Card findBestMatchParallel(Mat frame, String set) {
         String folderPath = Main.RESOURCE_PATH + set;
         List<File> imageFiles;
-        if(Objects.equals(set, "ALL")){
+        if (Objects.equals(set, "ALL")) {
             imageFiles = Main.PLAYABLE_SETS.parallelStream()
                     .map(images::get)
                     .flatMap(Collection::parallelStream).toList();
@@ -81,39 +83,39 @@ public class ImageMatcher {
         var results = imageFiles.stream().parallel().map(img -> getMatchResult(img, orb, descriptorsFrame, folderPath));
 
         var matchResult = results.max(Comparator.comparingInt(MatchResult::getMatches)).orElse(new MatchResult());
-        System.out.println("Score: "+matchResult.matches);
+        System.out.println("Score: " + matchResult.matches);
         return matchResult.card;
     }
 
     private static MatchResult getMatchResult(File imageFile, ORB orb, Mat descriptorsFrame, String folderPath) {
-    String filePath = imageFile.getAbsolutePath();
+        String filePath = imageFile.getAbsolutePath();
 
-    Mat descriptorsImg;
-    if (DescriptorCache.contains(filePath)) {
-        descriptorsImg = DescriptorCache.getDescriptor(filePath);
-    } else {
-        Mat img = Imgcodecs.imread(filePath, Imgcodecs.IMREAD_GRAYSCALE);
-        if (img.empty()) {
-            return new MatchResult(new Card(), -1);
+        Mat descriptorsImg;
+        if (DescriptorCache.contains(filePath)) {
+            descriptorsImg = DescriptorCache.getDescriptor(filePath);
+        } else {
+            Mat img = Imgcodecs.imread(filePath, Imgcodecs.IMREAD_GRAYSCALE);
+            if (img.empty()) {
+                return new MatchResult(new Card(), -1);
+            }
+            System.out.println("Did not contain");
+
+            MatOfKeyPoint keypointsImg = new MatOfKeyPoint();
+            descriptorsImg = new Mat();
+            orb.detectAndCompute(img, new Mat(), keypointsImg, descriptorsImg);
+
+            // Store descriptors in cache
+            DescriptorCache.addDescriptor(filePath, descriptorsImg);
         }
-        System.out.println("Did not contain");
 
-        MatOfKeyPoint keypointsImg = new MatOfKeyPoint();
-        descriptorsImg = new Mat();
-        orb.detectAndCompute(img, new Mat(), keypointsImg, descriptorsImg);
+        int matches = matchFeatures(descriptorsFrame, descriptorsImg);
 
-        // Store descriptors in cache
-        DescriptorCache.addDescriptor(filePath, descriptorsImg);
+        String name = imageFile.getName().substring(0, imageFile.getName().lastIndexOf("_")).replace("_", " ");
+        String cardNumber = imageFile.getName().substring(imageFile.getName().lastIndexOf("_") + 1, imageFile.getName().lastIndexOf("."));
+        String set = folderPath.substring(folderPath.lastIndexOf('/') + 1);
+
+        return new MatchResult(new Card(set, name, cardNumber), matches);
     }
-
-    int matches = matchFeatures(descriptorsFrame, descriptorsImg);
-
-    String name = imageFile.getName().substring(0, imageFile.getName().lastIndexOf("_")).replace("_", " ");
-    String cardNumber = imageFile.getName().substring(imageFile.getName().lastIndexOf("_") + 1, imageFile.getName().lastIndexOf("."));
-    String set = folderPath.substring(folderPath.lastIndexOf('/') + 1);
-
-    return new MatchResult(new Card(set, name, cardNumber), matches);
-}
 
 
     private static int matchFeatures(Mat descriptors1, Mat descriptors2) {
