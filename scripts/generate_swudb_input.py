@@ -1,10 +1,10 @@
 import csv
 from collections import OrderedDict
 
-MAX_NR = 510
-SET = "SOR"
-FILE_NAME = "src/main/resources/sor_full.csv"
+MAX_NR = 600
+SET = "SHD"
 
+FILE_NAME = "../src/main/resources/"+SET.lower()+"_full.csv"
 def generate_full():
 # Write headers only once
     with open(FILE_NAME, mode="w", newline="") as file:

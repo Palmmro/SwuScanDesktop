@@ -5,10 +5,10 @@ from pathlib import Path
 from PIL import Image
 import os
 
-SET="SOR"
+SET="SHD"
 
 URL="https://swudb.com/images/cards/"+SET+"/"
-CSV="src/main/resources/human_readable_full_collection_"+SET.lower()+".csv"
+CSV="../src/main/resources/human_readable_full_collection_"+SET.lower()+".csv"
 # CSV="human_readable_test.csv"
 DELAY=0.5
 
@@ -26,10 +26,10 @@ def get_image():
         url = URL + number +".png"
         set_string = URL[-4:]
         # set_string = "TEST/"
-        path = "src/main/resources/images/"+ set_string
+        path = "../src/main/resources/images/"+ set_string
         name = row["CardName"].replace(" ","_")
-        savepath = "src/main/resources/images/"+ set_string + row["CardName"].replace(" ","_")
-        Path("src/main/resources/images/"+ set_string).mkdir(parents=True, exist_ok=True)
+        savepath = "../src/main/resources/images/"+ set_string + row["CardName"].replace(" ","_")
+        Path("../src/main/resources/images/"+ set_string).mkdir(parents=True, exist_ok=True)
 
         matching_files = get_nr_matching_files(name, path)
         if len(matching_files) > 0 :
