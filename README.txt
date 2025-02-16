@@ -2,18 +2,18 @@ App for scanning cards in Star wars unlimited.
 Will create a CSV file at src/main/resources/output_collection.csv that can be uploaded to swudb.com
 
 Install:
-
+To run
 * Java - https://learn.microsoft.com/en-us/java/openjdk/download#openjdk-21
-* Python
-* pip install beautifulsoup4
-* pip install requests
 * Maven - https://phoenixnap.com/kb/install-maven-windows
-* Tesseract-OCR - https://github.com/UB-Mannheim/tesseract/wiki
-    Make sure to install to "C:/Program Files/Tesseract-OCR" (or update the code)
+
+To develop:
+* Python
+* pip install requests
+* pip install pillow
 
 Using a smartphone as webcam makes it easier to use:
 * Android: https://droidcam.app/
-* Ios https://reincubate.com/camo/downloads/ (not tested)
+* Ios https://reincubate.com/camo/downloads/
 
 Note: only tested on windows
 

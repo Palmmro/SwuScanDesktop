@@ -16,21 +16,22 @@ import java.util.Objects;
 public class Main {
     private static final int WEBCAM_ID = 1;
 
-    private static final int ZERO = 96;
-    private static final int ONE = 97;
-    private static final int TWO = 98;
-    private static final int THREE = 99;
-    private static final int FOUR = 100;
-    private static final int FIVE = 101;
-    private static final int SIX = 102;
-    private static final int SEVEN = 103;
-    private static final int EIGHT = 104;
-    private static final int NINE = 105;
-    private static final int S = 83;
-    private static final int D = 68;
-    private static final int A = 65;
+    private static final List<Integer> ZERO = List.of(96, 48);
+    private static final List<Integer> ONE = List.of(97, 49);
+    private static final List<Integer> TWO = List.of(98, 50);
+    private static final List<Integer> THREE = List.of(99, 51);
+    private static final List<Integer> FOUR = List.of(100, 52);
+    private static final List<Integer> FIVE = List.of(101, 53);
+    private static final List<Integer> SIX = List.of(102, 54);
+    private static final List<Integer> SEVEN = List.of(103, 55);
+    private static final List<Integer> EIGHT = List.of(104, 56);
+    private static final List<Integer> NINE = List.of(105, 57);
+    private static final List<Integer> S = List.of(83);
+    private static final List<Integer> D = List.of(68);
+    private static final List<Integer> A = List.of(65);
 
     private static final String SCANNING_TEXT = "Scanning...";
+    private static final String LOADING_TEXT = "Loading...";
     private static final String OPTIONS_TEXT = "? \n1(N)/2(H)/3(F)/4(HF) to add. \n0 to reset. 5 to add bulk";
     private static int setId = 0;
     public static final List<String> SETS = List.of("ALL", "SOR", "SHD", "TWI");
@@ -64,9 +65,8 @@ public class Main {
         }
 
 
-
         Mat frame = new Mat();
-        String displayText = SCANNING_TEXT;
+        String displayText = LOADING_TEXT;
         Card foundCard = null;
 
         boolean shouldRun = true;
@@ -84,12 +84,12 @@ public class Main {
                 if (timeToDisplay.isAfter(Instant.now())) {
                     addTextToFrame(frame, tempDisplayText, 10, 60, 0.75, 1);
                 } else {
-                    addTextToFrame(frame, "Set: "+ SETS.get(setId), 10, 90, 0.5, 1);
+                    addTextToFrame(frame, "Set: " + SETS.get(setId), 10, 90, 0.5, 1);
                 }
                 var key = HighGui.pressedKey;
 
                 if (debugMode) {
-                    debugText = "KeyId: "+key;
+                    debugText = "KeyId: " + key;
                     addTextToFrame(frame, debugText, 200, 90, 0.75, 1);
                 }
 
@@ -101,7 +101,7 @@ public class Main {
                 if (HighGui.waitKey(500) == 'q') {
                     break;
                 } else {
-                    if (displayText.equals(SCANNING_TEXT)) {
+                    if (displayText.equals(SCANNING_TEXT) || displayText.equals(LOADING_TEXT)) {
                         TimeMeasure.start("Search ALl Cards");
                         foundCard = ImageMatcher.findBestMatchParallel(frame, SETS.get(setId));
                         TimeMeasure.end("Search ALl Cards");
@@ -112,13 +112,13 @@ public class Main {
                 }
 
 
-                if (key == ONE && foundCard != null) {
+                if (ONE.contains(key) && foundCard != null) {
                     logTempText("Added regular " + foundCard.getUniqueDisplayName() + " to csv");
                     saveCard(foundCard, false, 1);
                     foundCard = null;
                     displayText = SCANNING_TEXT;
                 }
-                if (key == TWO && foundCard != null) {
+                if (TWO.contains(key) && foundCard != null) {
                     if (displayText.equals(BULK_TEXT)) {
                         logTempText("Added 2 regular " + foundCard.getUniqueDisplayName() + " to csv");
                         saveCard(foundCard, false, 2);
@@ -130,7 +130,7 @@ public class Main {
                         displayText = SCANNING_TEXT;
                     }
                 }
-                if (key == THREE && foundCard != null) {
+                if (THREE.contains(key) && foundCard != null) {
                     if (displayText.equals(BULK_TEXT)) {
                         logTempText("Added 3 regular " + foundCard.getUniqueDisplayName() + " to csv");
                         saveCard(foundCard, false, 3);
@@ -141,7 +141,7 @@ public class Main {
                     foundCard = null;
                     displayText = SCANNING_TEXT;
                 }
-                if (key == FOUR && foundCard != null) {
+                if (FOUR.contains(key) && foundCard != null) {
                     if (displayText.equals(BULK_TEXT)) {
                         logTempText("Added 4 regular " + foundCard.getUniqueDisplayName() + " to csv");
                         saveCard(foundCard, false, 4);
@@ -154,7 +154,7 @@ public class Main {
                         displayText = SCANNING_TEXT;
                     }
                 }
-                if (key == FIVE && foundCard != null) {
+                if (FIVE.contains(key) && foundCard != null) {
                     if (displayText.equals(BULK_TEXT)) {
                         logTempText("Added 5 regular " + foundCard.getUniqueDisplayName() + " to csv");
                         saveCard(foundCard, false, 5);
@@ -164,7 +164,7 @@ public class Main {
                         displayText = BULK_TEXT;
                     }
                 }
-                if (key == SIX && foundCard != null) {
+                if (SIX.contains(key) && foundCard != null) {
                     if (displayText.equals(BULK_TEXT)) {
                         logTempText("Added 6 regular " + foundCard.getUniqueDisplayName() + " to csv");
                         saveCard(foundCard, false, 6);
@@ -172,7 +172,7 @@ public class Main {
                         displayText = SCANNING_TEXT;
                     }
                 }
-                if (key == SEVEN && foundCard != null) {
+                if (SEVEN.contains(key) && foundCard != null) {
                     if (displayText.equals(BULK_TEXT)) {
                         logTempText("Added 7 regular " + foundCard.getUniqueDisplayName() + " to csv");
                         saveCard(foundCard, false, 7);
@@ -180,7 +180,7 @@ public class Main {
                         displayText = SCANNING_TEXT;
                     }
                 }
-                if (key == EIGHT && foundCard != null) {
+                if (EIGHT.contains(key) && foundCard != null) {
                     if (displayText.equals(BULK_TEXT)) {
                         logTempText("Added 8 regular " + foundCard.getUniqueDisplayName() + " to csv");
                         saveCard(foundCard, false, 8);
@@ -188,7 +188,7 @@ public class Main {
                         displayText = SCANNING_TEXT;
                     }
                 }
-                if (key == NINE && foundCard != null) {
+                if (NINE.contains(key) && foundCard != null) {
                     if (displayText.equals(BULK_TEXT)) {
                         logTempText("Added 9 regular " + foundCard.getUniqueDisplayName() + " to csv");
                         saveCard(foundCard, false, 9);
@@ -196,18 +196,18 @@ public class Main {
                         displayText = SCANNING_TEXT;
                     }
                 }
-                if (key == ZERO) {
+                if (ZERO.contains(key)) {
                     System.out.println("Reset");
                     foundCard = null;
                     displayText = SCANNING_TEXT;
                 }
-                if (key == S) {
+                if (S.contains(key)) {
                     setId = (setId + 1) % (SETS.size());
                 }
-                if (key == A) {
+                if (A.contains(key)) {
                     setId = SETS.indexOf("ALL");
                 }
-                if (key == D) {
+                if (D.contains(key)) {
                     debugMode = !debugMode;
                     System.out.println("Toggle debug");
                 }
@@ -237,7 +237,7 @@ public class Main {
     }
 
     private static boolean saveHyperspaceCard(Card card, boolean isFoil) {
-        Card hyperspaceCard = collectionUtil.getHyperspaceCardFromName(card.getCardName(),SETS.get(setId));
+        Card hyperspaceCard = collectionUtil.getHyperspaceCardFromName(card.getCardName(), SETS.get(setId));
         if (hyperspaceCard == null) {
             System.out.println("No hyperspace available for card");
             return false;
@@ -247,7 +247,6 @@ public class Main {
         return true;
 
     }
-
 
 
     private static void addTextToFrame(Mat frame, String text) {
