@@ -6,7 +6,7 @@ public class CollectionUtil {
 
     private static final String FULL_COLLECTION_PATH = "src/main/resources/human_readable_full_collection.csv";
     private static final String COLLECTION_PATH = "src/main/resources/human_readable_full_collection_";
-    private static final String OUTPUT_COLLECTION_PATH = "src/main/resources/output_collection.csv";
+    private static final String OUTPUT_COLLECTION_PATH = "output_collection.csv";
     private static final String csvSeparator = ",";
 
     private final HashMap<String,Card> fullCollectionMapNormal = new HashMap<>();
