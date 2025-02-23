@@ -84,6 +84,9 @@ public class ImageMatcher {
 
         var matchResult = results.max(Comparator.comparingInt(MatchResult::getMatches)).orElse(new MatchResult());
         System.out.println("Score: " + matchResult.matches);
+        if (matchResult.matches < 20){
+            return null;
+        }
         return matchResult.card;
     }
 

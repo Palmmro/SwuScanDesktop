@@ -102,11 +102,13 @@ public class Main {
                     break;
                 } else {
                     if (displayText.equals(SCANNING_TEXT) || displayText.equals(LOADING_TEXT)) {
-                        TimeMeasure.start("Search ALl Cards");
+                        TimeMeasure.start("Search "+SETS.get(setId)+" Cards");
                         foundCard = ImageMatcher.findBestMatchParallel(frame, SETS.get(setId));
-                        TimeMeasure.end("Search ALl Cards");
+                        TimeMeasure.end("Search "+SETS.get(setId)+" Cards");
                         if (foundCard != null) {
                             displayText = foundCard.getUniqueDisplayName() + OPTIONS_TEXT;
+                        } else {
+                            displayText = SCANNING_TEXT;
                         }
                     }
                 }
