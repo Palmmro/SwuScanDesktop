@@ -89,7 +89,7 @@ public class ImageMatcher {
 
     private static MatchResult getMatchResult(File imageFile, ORB orb, Mat descriptorsFrame, String folderPath) {
         String filePath = imageFile.getAbsolutePath();
-
+        String set = filePath.substring(filePath.lastIndexOf("\\")-3, filePath.lastIndexOf("\\"));
         Mat descriptorsImg;
         if (DescriptorCache.contains(filePath)) {
             descriptorsImg = DescriptorCache.getDescriptor(filePath);
@@ -112,8 +112,6 @@ public class ImageMatcher {
 
         String name = imageFile.getName().substring(0, imageFile.getName().lastIndexOf("_")).replace("_", " ");
         String cardNumber = imageFile.getName().substring(imageFile.getName().lastIndexOf("_") + 1, imageFile.getName().lastIndexOf("."));
-        String set = folderPath.substring(folderPath.lastIndexOf('/') + 1);
-
         return new MatchResult(new Card(set, name, cardNumber), matches);
     }
 
