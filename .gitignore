@@ -1,5 +1,5 @@
 /.idea/
-/src/main/resources/output_collection.csv
 /target/
 /SwuScanDesktop.iml
 /scripts/.venv/
+/output_collection.csv

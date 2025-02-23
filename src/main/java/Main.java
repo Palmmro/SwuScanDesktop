@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class Main {
-    private static final int WEBCAM_ID = 1;
+    private static final int WEBCAM_ID = ConfigUtil.getConfigValueAsInt("WEBCAM_ID");
 
     private static final List<Integer> ZERO = List.of(96, 48);
     private static final List<Integer> ONE = List.of(97, 49);

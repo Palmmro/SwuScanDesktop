@@ -20,8 +20,10 @@ Note: only tested on windows
 If webcam not working try changing WEBCAM_ID in main to something else
 (0 = first cam, 1 = second cam etc)
 
+============================
 Build: mvn clean install
 Run: mvn exec:java
+============================
 
 ----------------
 How to get new collection of cards:
