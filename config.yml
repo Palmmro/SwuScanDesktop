@@ -1,3 +1,6 @@
 # Change which camera to read from.
 WEBCAM_ID: 2
 
+# ALL, SOR, SHD or TWI. Toggle with "s"
+START_SET: TWI
+
