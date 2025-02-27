@@ -17,17 +17,19 @@ Using a smartphone as webcam makes it easier to use:
 
 Note: only tested on windows
 
-If webcam not working try changing WEBCAM_ID in main to something else
+If webcam not working try changing WEBCAM_ID in config to something else
 (0 = first cam, 1 = second cam etc)
+
+----------------
+How add a new set
+* cd scripts
+* Change "SET" in and run generate_swudb_input.py
+* Go to swudb.com (account with empty collection)
+* Take src/main/resources/<set>_full.csv file and import bulk in swudb.com
+* Download human readable collection and name it "human_readable_full_collection_<set>.csv"
+* Change "SET" in and run download_images.py
 
 ============================
 Build: mvn clean install
 Run: mvn exec:java
 ============================
-
-----------------
-How to get new collection of cards:
-* Go to swudb.com (account with empty collection)
-* Create a file like twi_full.csv with number from 001 - 600
-* Import bulk in swudb
-* Download human readable collection

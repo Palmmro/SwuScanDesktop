@@ -2,7 +2,7 @@ import csv
 from collections import OrderedDict
 
 MAX_NR = 600
-SET = "SHD"
+SET = "JTL"
 
 FILE_NAME = "../src/main/resources/"+SET.lower()+"_full.csv"
 def generate_full():
