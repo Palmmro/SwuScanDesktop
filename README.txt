@@ -1,5 +1,5 @@
 App for scanning cards in Star wars unlimited.
-Will create a CSV file at src/main/resources/output_collection.csv that can be uploaded to swudb.com
+Will create a CSV file at output_collection.csv that can be uploaded to swudb.com
 
 Install:
 To run
