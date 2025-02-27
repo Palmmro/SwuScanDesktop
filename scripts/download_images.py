@@ -5,7 +5,7 @@ from pathlib import Path
 from PIL import Image
 import os
 
-SET="SHD"
+SET="TWI"
 
 URL="https://swudb.com/images/cards/"+SET+"/"
 CSV="../src/main/resources/human_readable_full_collection_"+SET.lower()+".csv"
