@@ -6,16 +6,16 @@ Yoda,TWI,004,Normal,Rare,1,False
 Count Dooku,TWI,005,Normal,Common,1,False
 Wat Tambor,TWI,006,Normal,Rare,1,False
 Captain Rex,TWI,007,Normal,Rare,1,False
-Padme Amidala,TWI,008,Normal,Common,1,False
+Padmé Amidala,TWI,008,Normal,Common,1,False
 Maul,TWI,009,Normal,Common,1,False
 Pre Vizsla,TWI,010,Normal,Rare,1,False
 Ahsoka Tano,TWI,011,Normal,Special,1,False
 Anakin Skywalker,TWI,012,Normal,Common,1,False
 Mace Windu,TWI,013,Normal,Rare,1,False
 Asajj Ventress,TWI,014,Normal,Rare,1,False
-General Grievous,TWI,015,Normal,Special,2,False
+General Grievous,TWI,015,Normal,Special,1,False
 Jango Fett,TWI,016,Normal,Common,1,False
-Chancellor Palpatine & Darth Sidious,TWI,017,Normal,Rare,1,False
+Chancellor Palpatine,TWI,017,Normal,Rare,1,False
 Quinlan Vos,TWI,018,Normal,Common,1,False
 Pau City,TWI,019,Normal,Rare,1,False
 Sundari,TWI,020,Normal,Common,1,False
@@ -57,7 +57,7 @@ Equalize,TWI,055,Normal,Rare,1,False
 Compassionate Senator,TWI,056,Normal,Uncommon,1,False
 Warrior Drone,TWI,057,Normal,Common,1,False
 Padawan Starfighter,TWI,058,Normal,Common,1,False
-Royal Guard Attache,TWI,059,Normal,Common,1,False
+Royal Guard Attaché,TWI,059,Normal,Common,1,False
 Trade Federation Shuttle,TWI,060,Normal,Common,1,False
 Infantry of the 212th,TWI,061,Normal,Common,1,False
 Daughter of Dathomir,TWI,062,Normal,Common,1,False
@@ -75,6 +75,7 @@ Grievous Reassembly,TWI,073,Normal,Common,1,False
 Guarding the Way,TWI,074,Normal,Common,1,False
 Disruptive Burst,TWI,075,Normal,Uncommon,1,False
 Death by Droids,TWI,076,Normal,Uncommon,1,False
+Vanquish,TWI,077,Normal,Common,1,False
 The Invasion of Christophsis,TWI,078,Normal,Legendary,1,False
 Confederate Courier,TWI,079,Normal,Common,1,False
 Poggle the Lesser,TWI,080,Normal,Rare,1,False
@@ -104,6 +105,7 @@ Pyrrhic Assault,TWI,103,Normal,Legendary,1,False
 Obedient Vanguard,TWI,104,Normal,Common,1,False
 Steadfast Senator,TWI,105,Normal,Uncommon,1,False
 Coruscant Guard,TWI,106,Normal,Common,1,False
+Patrolling V-Wing,TWI,107,Normal,Special,1,False
 Ryloth Militia,TWI,108,Normal,Common,1,False
 501st Liberator,TWI,109,Normal,Common,1,False
 Huyang,TWI,110,Normal,Rare,1,False
@@ -119,8 +121,12 @@ Nameless Valor,TWI,119,Normal,Uncommon,1,False
 Strategic Acumen,TWI,120,Normal,Common,1,False
 General's Blade,TWI,121,Normal,Rare,1,False
 Squad Support,TWI,122,Normal,Uncommon,1,False
+Outflank,TWI,123,Normal,Special,1,False
+Tactical Advantage,TWI,124,Normal,Special,1,False
 The Clone Wars,TWI,125,Normal,Rare,1,False
 Encouraging Leadership,TWI,126,Normal,Common,1,False
+Resupply,TWI,127,Normal,Common,1,False
+Take Captive,TWI,128,Normal,Common,1,False
 In Defense of Kamino,TWI,129,Normal,Rare,1,False
 Bo-Katan Kryze,TWI,130,Normal,Rare,1,False
 OOM-Series Officer,TWI,131,Normal,Common,1,False
@@ -162,9 +168,11 @@ Aurra Sing,TWI,166,Normal,Uncommon,1,False
 Heavy Persuader Tank,TWI,167,Normal,Common,1,False
 Old Access Codes,TWI,168,Normal,Common,1,False
 Clone Cohort,TWI,169,Normal,Uncommon,1,False
+Daring Raid,TWI,170,Normal,Common,1,False
 Grenade Strike,TWI,171,Normal,Common,1,False
 Grim Resolve,TWI,172,Normal,Common,1,False
 Blood Sport,TWI,173,Normal,Uncommon,1,False
+Open Fire,TWI,174,Normal,Special,1,False
 Strategic Analysis,TWI,175,Normal,Common,1,False
 Caught in the Crossfire,TWI,176,Normal,Rare,1,False
 Guerilla Insurgency,TWI,177,Normal,Rare,1,False
@@ -182,7 +190,7 @@ Wartime Profiteering,TWI,188,Normal,Uncommon,1,False
 Unnatural Life,TWI,189,Normal,Rare,1,False
 On the Doorstep,TWI,190,Normal,Common,1,False
 Wolf Pack Escort,TWI,191,Normal,Common,1,False
-Padme Amidala,TWI,192,Normal,Uncommon,1,False
+Padmé Amidala,TWI,192,Normal,Uncommon,1,False
 R2-D2,TWI,193,Normal,Uncommon,1,False
 Ahsoka Tano,TWI,194,Normal,Legendary,1,False
 Sabine Wren,TWI,195,Normal,Rare,1,False
@@ -216,6 +224,7 @@ Political Pressure,TWI,222,Normal,Common,1,False
 Unmasking the Conspiracy,TWI,223,Normal,Rare,1,False
 Breaking In,TWI,224,Normal,Common,1,False
 Now There Are Two of Them,TWI,225,Normal,Legendary,1,False
+Waylay,TWI,226,Normal,Special,1,False
 Prisoner of War,TWI,227,Normal,Uncommon,1,False
 Droid Starfighter,TWI,228,Normal,Common,1,False
 Battle Droid Escort,TWI,229,Normal,Special,1,False
@@ -243,17 +252,18 @@ Sword and Shield Maneuver,TWI,250,Normal,Uncommon,1,False
 Drop In,TWI,251,Normal,Common,1,False
 Aggrieved Parliamentarian,TWI,252,Normal,Common,1,False
 Headhunter Squadron,TWI,253,Normal,Common,1,False
+Volunteer Soldier,TWI,254,Normal,Common,1,False
 Brain Invaders,TWI,255,Normal,Rare,1,False
 Hold-Out Blaster,TWI,256,Normal,Common,1,False
 Private Manufacturing,TWI,257,Normal,Uncommon,1,False
-Nala Se,TWI,258,Showcase,Common,1,True
+Nala Se,TWI,258,Showcase,Rare,1,True
 Nute Gunray,TWI,259,Showcase,Common,1,True
 Obi-Wan Kenobi,TWI,260,Showcase,Common,1,True
 Yoda,TWI,261,Showcase,Rare,1,True
 Count Dooku,TWI,262,Showcase,Common,1,True
 Wat Tambor,TWI,263,Showcase,Rare,1,True
 Captain Rex,TWI,264,Showcase,Rare,1,True
-Padme Amidala,TWI,265,Showcase,Common,1,True
+Padmé Amidala,TWI,265,Showcase,Common,1,True
 Maul,TWI,266,Showcase,Common,1,True
 Pre Vizsla,TWI,267,Showcase,Rare,1,True
 Ahsoka Tano,TWI,268,Showcase,Special,1,True
@@ -262,7 +272,8 @@ Mace Windu,TWI,270,Showcase,Rare,1,True
 Asajj Ventress,TWI,271,Showcase,Rare,1,True
 General Grievous,TWI,272,Showcase,Special,1,True
 Jango Fett,TWI,273,Showcase,Common,1,True
-Chancellor Palpatine & Darth Sidious,TWI,274,Showcase,Rare,1,True
+Chancellor Palpatine,TWI,274,Showcase,Rare,1,True
+Quinlan Vos,TWI,275,Showcase,Common,1,True
 Nala Se,TWI,276,Hyperspace,Rare,1,False
 Nute Gunray,TWI,277,Hyperspace,Common,1,False
 Obi-Wan Kenobi,TWI,278,Hyperspace,Common,1,False
@@ -270,14 +281,14 @@ Yoda,TWI,279,Hyperspace,Rare,1,False
 Count Dooku,TWI,280,Hyperspace,Common,1,False
 Wat Tambor,TWI,281,Hyperspace,Rare,1,False
 Captain Rex,TWI,282,Hyperspace,Rare,1,False
-Padme Amidala,TWI,283,Hyperspace,Common,1,False
+Padmé Amidala,TWI,283,Hyperspace,Common,1,False
 Maul,TWI,284,Hyperspace,Common,1,False
 Pre Vizsla,TWI,285,Hyperspace,Rare,1,False
 Anakin Skywalker,TWI,287,Hyperspace,Common,1,False
 Mace Windu,TWI,288,Hyperspace,Rare,1,False
 Asajj Ventress,TWI,289,Hyperspace,Rare,1,False
 Jango Fett,TWI,291,Hyperspace,Common,1,False
-Chancellor Palpatine & Darth Sidious,TWI,292,Hyperspace,Rare,1,False
+Chancellor Palpatine,TWI,292,Hyperspace,Rare,1,False
 Quinlan Vos,TWI,293,Hyperspace,Common,1,False
 Pau City,TWI,294,Hyperspace,Rare,1,False
 Sundari,TWI,295,Hyperspace,Common,1,False
@@ -314,9 +325,10 @@ Hello There,TWI,325,Hyperspace,Uncommon,1,False
 Finn,TWI,326,Hyperspace,Rare,1,False
 Duchess's Champion,TWI,327,Hyperspace,Uncommon,1,False
 Equalize,TWI,328,Hyperspace,Rare,1,False
+Compassionate Senator,TWI,329,Hyperspace,Uncommon,1,False
 Warrior Drone,TWI,330,Hyperspace,Common,1,False
 Padawan Starfighter,TWI,331,Hyperspace,Common,1,False
-Royal Guard Attache,TWI,332,Hyperspace,Common,1,False
+Royal Guard Attaché,TWI,332,Hyperspace,Common,1,False
 Trade Federation Shuttle,TWI,333,Hyperspace,Common,1,False
 Infantry of the 212th,TWI,334,Hyperspace,Common,1,False
 Daughter of Dathomir,TWI,335,Hyperspace,Common,1,False
@@ -334,6 +346,7 @@ Grievous Reassembly,TWI,346,Hyperspace,Common,1,False
 Guarding the Way,TWI,347,Hyperspace,Common,1,False
 Disruptive Burst,TWI,348,Hyperspace,Uncommon,1,False
 Death by Droids,TWI,349,Hyperspace,Uncommon,1,False
+Vanquish,TWI,350,Hyperspace,Common,1,False
 The Invasion of Christophsis,TWI,351,Hyperspace,Legendary,1,False
 Confederate Courier,TWI,352,Hyperspace,Common,1,False
 Poggle the Lesser,TWI,353,Hyperspace,Rare,1,False
@@ -378,6 +391,8 @@ General's Blade,TWI,391,Hyperspace,Rare,1,False
 Squad Support,TWI,392,Hyperspace,Uncommon,1,False
 The Clone Wars,TWI,393,Hyperspace,Rare,1,False
 Encouraging Leadership,TWI,394,Hyperspace,Common,1,False
+Resupply,TWI,395,Hyperspace,Common,1,False
+Take Captive,TWI,396,Hyperspace,Common,1,False
 In Defense of Kamino,TWI,397,Hyperspace,Rare,1,False
 Bo-Katan Kryze,TWI,398,Hyperspace,Rare,1,False
 OOM-Series Officer,TWI,399,Hyperspace,Common,1,False
@@ -418,6 +433,7 @@ Aurra Sing,TWI,433,Hyperspace,Uncommon,1,False
 Heavy Persuader Tank,TWI,434,Hyperspace,Common,1,False
 Old Access Codes,TWI,435,Hyperspace,Common,1,False
 Clone Cohort,TWI,436,Hyperspace,Uncommon,1,False
+Daring Raid,TWI,437,Hyperspace,Common,1,False
 Grenade Strike,TWI,438,Hyperspace,Common,1,False
 Grim Resolve,TWI,439,Hyperspace,Common,1,False
 Blood Sport,TWI,440,Hyperspace,Uncommon,1,False
@@ -437,7 +453,7 @@ Wartime Profiteering,TWI,453,Hyperspace,Uncommon,1,False
 Unnatural Life,TWI,454,Hyperspace,Rare,1,False
 On the Doorstep,TWI,455,Hyperspace,Common,1,False
 Wolf Pack Escort,TWI,456,Hyperspace,Common,1,False
-Padme Amidala,TWI,457,Hyperspace,Uncommon,1,False
+Padmé Amidala,TWI,457,Hyperspace,Uncommon,1,False
 R2-D2,TWI,458,Hyperspace,Uncommon,1,False
 Ahsoka Tano,TWI,459,Hyperspace,Legendary,1,False
 Sabine Wren,TWI,460,Hyperspace,Rare,1,False
@@ -494,6 +510,7 @@ Sword and Shield Maneuver,TWI,510,Hyperspace,Uncommon,1,False
 Drop In,TWI,511,Hyperspace,Common,1,False
 Aggrieved Parliamentarian,TWI,512,Hyperspace,Common,1,False
 Headhunter Squadron,TWI,513,Hyperspace,Common,1,False
+Volunteer Soldier,TWI,514,Hyperspace,Common,1,False
 Brain Invaders,TWI,515,Hyperspace,Rare,1,False
 Hold-Out Blaster,TWI,516,Hyperspace,Common,1,False
 Private Manufacturing,TWI,517,Hyperspace,Uncommon,1,False
