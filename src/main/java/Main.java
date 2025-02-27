@@ -20,10 +20,6 @@ public class Main {
     private static final List<Integer> THREE = List.of(99, 51);
     private static final List<Integer> FOUR = List.of(100, 52);
     private static final List<Integer> FIVE = List.of(101, 53);
-    private static final List<Integer> SIX = List.of(102, 54);
-    private static final List<Integer> SEVEN = List.of(103, 55);
-    private static final List<Integer> EIGHT = List.of(104, 56);
-    private static final List<Integer> NINE = List.of(105, 57);
     private static final List<Integer> S = List.of(83);
     private static final List<Integer> D = List.of(68);
     private static final List<Integer> A = List.of(65);
@@ -36,7 +32,7 @@ public class Main {
     private static final String SCANNING_TEXT = "Scanning...";
     private static final String LOADING_TEXT = "Loading...";
     private static final String OPTIONS_TEXT = "? \n1(N)/2(H)/3(F)/4(HF) to add. \n0 to reset. 5 to add bulk";
-    private static int setId = 0;
+    private static int setId;
     public static final List<String> SETS = List.of("ALL", "SOR", "SHD", "TWI");
 
 
@@ -47,7 +43,6 @@ public class Main {
     private static final String BULK_TEXT = "Add how many cards?";
     public static final String RESOURCE_PATH = "src/main/resources/images/";
     private static String tempDisplayText = "Added X cards.";
-    private static String debugText = "";
 
     private static Instant timeToDisplay = Instant.MIN;
     private static boolean debugMode = false;
@@ -60,6 +55,9 @@ public class Main {
         // Load the OpenCV native library
         OpenCV.loadLocally();
         resetBulkAmount();
+        var startSet = ConfigUtil.getConfigValue("START_SET");
+        var index = SETS.indexOf(startSet);
+        setId = index == -1 ? 0: index;
     }
 
     public static void main(String[] args) throws InterruptedException {
@@ -89,7 +87,7 @@ public class Main {
                 var key = HighGui.pressedKey;
 
                 if (debugMode) {
-                    debugText = "KeyId: " + key;
+                    var debugText = "KeyId: " + key;
                     System.out.println("KeyId: " + key);
                     addTextToFrame(frame, debugText, 200, 90, 0.75, 1, false);
                 }
