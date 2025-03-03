@@ -92,7 +92,11 @@ public class ImageMatcher {
 
     private static MatchResult getMatchResult(File imageFile, ORB orb, Mat descriptorsFrame, String folderPath) {
         String filePath = imageFile.getAbsolutePath();
-        String set = filePath.substring(filePath.lastIndexOf("\\")-3, filePath.lastIndexOf("\\"));
+        int lastIndexOfSlash = filePath.lastIndexOf("\\");
+        if(lastIndexOfSlash == -1){
+            lastIndexOfSlash = filePath.lastIndexOf("/");
+        }
+        String set = filePath.substring(lastIndexOfSlash-3, lastIndexOfSlash);
         Mat descriptorsImg;
         if (DescriptorCache.contains(filePath)) {
             descriptorsImg = DescriptorCache.getDescriptor(filePath);

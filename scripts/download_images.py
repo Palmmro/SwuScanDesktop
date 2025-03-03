@@ -5,7 +5,7 @@ from pathlib import Path
 from PIL import Image
 import os
 
-SET="JTL"
+SET="SOR"
 PATH="../src/main/resources/"
 URL="https://swudb.com/images/cards/"+SET+"/"
 CSV=PATH+"human_readable_full_collection_"+SET.lower()+".csv"
@@ -28,7 +28,7 @@ def get_image():
         # set_string = "TEST/"
         path = PATH+"images/"+ set_string
         name = row["CardName"].replace(" ","_")
-        savepath = PATH+"images/"+ set_string + row["CardName"].replace(" ","_")
+        savepath = PATH+"images/"+ set_string + name
         Path(PATH+"images/"+ set_string).mkdir(parents=True, exist_ok=True)
 
         matching_files = get_nr_matching_files(name, path)
@@ -38,12 +38,25 @@ def get_image():
             old_name_start = matching_files[0][:-8]
             old_name_end = matching_files[0][-8:]
             new_name = old_name_start + "_(Leader)" + old_name_end
-            os.rename(path+matching_files[0], path+new_name)
+            if not has_exact_match(number, path):
+                os.rename(path+matching_files[0], path+new_name)
 
         savepath = savepath + "_" + number
 
-        download_image(url, savepath+".jpg")
-        time.sleep(DELAY)
+        if has_exact_match(number, path):
+            print("Image already downloaded, skipping")
+        else:
+            download_image(url, savepath+".jpg")
+            time.sleep(DELAY)
+
+
+def has_exact_match(search_term, path):
+    for root, dirs, files in os.walk(path):
+        for name in files:
+            nr = name[-7:][:-4]
+            if nr == search_term:
+                return True
+    return False
 
 def get_nr_matching_files(search_term, path):
     matches = 0
