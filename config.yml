@@ -1,8 +1,8 @@
 # Change which camera to read from.
-WEBCAM_ID: 0
+WEBCAM_ID: 2
 
 # ALL, SOR, SHD, TWI or JTL. Toggle with "s"
-START_SET: SOR
+START_SET: TWI
 
 # INFO or DEBUG
 LOG_LEVEL: INFO
