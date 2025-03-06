@@ -71,7 +71,7 @@ public class ImageMatcher {
         }
 
         if (imageFiles.isEmpty()) {
-            System.out.println("No images found in directory.");
+            Main.logInfo("No images found in directory.");
             return null;
         }
 
@@ -83,7 +83,7 @@ public class ImageMatcher {
         var results = imageFiles.stream().parallel().map(img -> getMatchResult(img, orb, descriptorsFrame, folderPath));
 
         var matchResult = results.max(Comparator.comparingInt(MatchResult::getMatches)).orElse(new MatchResult());
-        System.out.println("Score: " + matchResult.matches);
+        Main.logDebug("Score: " + matchResult.matches);
         if (matchResult.matches < 20){
             return null;
         }
@@ -105,7 +105,6 @@ public class ImageMatcher {
             if (img.empty()) {
                 return new MatchResult(new Card(), -1);
             }
-            System.out.println("Did not contain");
 
             MatOfKeyPoint keypointsImg = new MatOfKeyPoint();
             descriptorsImg = new Mat();
@@ -125,7 +124,7 @@ public class ImageMatcher {
 
     private static int matchFeatures(Mat descriptors1, Mat descriptors2) {
         if (descriptors1.empty() || descriptors2.empty()) {
-            System.out.println("Error: One or both descriptor matrices are empty!");
+            Main.logInfo("Error: One or both descriptor matrices are empty!");
             return 0;
         }
 
@@ -147,7 +146,7 @@ public class ImageMatcher {
             }
             return goodMatches;
         } catch (Exception e) {
-            System.out.println("Error during feature matching: " + e.getMessage());
+            Main.logInfo("Error during feature matching: " + e.getMessage());
             return 0;
         }
     }

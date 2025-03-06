@@ -13,6 +13,7 @@ import java.util.*;
 
 public class Main {
     private static final int WEBCAM_ID = ConfigUtil.getConfigValueAsInt("WEBCAM_ID");
+    private static final String LOG_LEVEL = ConfigUtil.getConfigValue("LOG_LEVEL");
 
     private static final List<Integer> ZERO = List.of(96, 48);
     private static final List<Integer> ONE = List.of(97, 49);
@@ -28,12 +29,13 @@ public class Main {
     private static final List<Integer> RIGHT = List.of(39);
     private static final List<Integer> DOWN = List.of(40);
     private static final List<Integer> ENTER = List.of(10);
+    private static final List<Integer> ESCAPE = List.of(27);
 
     private static final String SCANNING_TEXT = "Scanning...";
     private static final String LOADING_TEXT = "Loading...";
     private static final String OPTIONS_TEXT = "? \n1(N)/2(H)/3(F)/4(HF) to add. \n0 to reset. 5 to add bulk";
     private static int setId;
-    public static final List<String> SETS = List.of("ALL", "SOR", "SHD", "TWI");
+    private static final List<String> SETS = List.of("ALL", "SOR", "SHD", "TWI", "JTL");
 
 
     public static final List<String> PLAYABLE_SETS = SETS.stream().filter(s -> !Objects.equals(s, "ALL")).toList();
@@ -47,7 +49,7 @@ public class Main {
     private static Instant timeToDisplay = Instant.MIN;
     private static boolean debugMode = false;
     private static boolean bulkMode = false;
-    private static Map<Integer, Integer> bulkAmount = new HashMap<>();
+    private static final Map<Integer, Integer> bulkAmount = new HashMap<>();
 
     private static int selected = 0;
 
@@ -65,7 +67,7 @@ public class Main {
         VideoCapture capture = new VideoCapture(WEBCAM_ID);
 
         if (!capture.isOpened()) {
-            System.out.println("Error: Could not open video capture.");
+            logInfo("Error: Could not open video capture.");
             return;
         }
 
@@ -76,7 +78,7 @@ public class Main {
 
         boolean shouldRun = true;
 
-        System.out.println("Started SWU scan");
+        logInfo("Started SWU scan");
         while (shouldRun) {
             // Read a frame from the webcam
             if (capture.read(frame)) {
@@ -88,7 +90,7 @@ public class Main {
 
                 if (debugMode) {
                     var debugText = "KeyId: " + key;
-                    System.out.println("KeyId: " + key);
+                    logDebug("KeyId: " + key);
                     addTextToFrame(frame, debugText, 200, 90, 0.75, 1, false);
                 }
 
@@ -187,7 +189,7 @@ public class Main {
                     bulkMode = true;
                 }
                 if (ZERO.contains(key)) {
-                    System.out.println("Reset");
+                    logInfo("Reset");
                     foundCard = null;
                     displayText = SCANNING_TEXT;
                 }
@@ -199,7 +201,7 @@ public class Main {
                 }
                 if (D.contains(key)) {
                     debugMode = !debugMode;
-                    System.out.println("Toggle debug");
+                    logInfo("Toggle debug");
                 }
                 if (LEFT.contains(key)) {
                     if(bulkAmount.get(selected) > 0){
@@ -215,6 +217,13 @@ public class Main {
                 }
                 if (DOWN.contains(key)) {
                     selected = Math.min(3, selected + 1);
+                }
+                if (ESCAPE.contains(key)) {
+                    bulkMode = false;
+                    resetBulkAmount();
+                    bulkMode = false;
+                    selected = 0;
+                    displayText = foundCard.getUniqueDisplayName() + OPTIONS_TEXT;
                 }
                 if (ENTER.contains(key) && foundCard != null) {
                     if(bulkMode){
@@ -235,7 +244,7 @@ public class Main {
                 }
 
             } else {
-                System.out.println("Error: Could not read frame.");
+                logInfo("Error: Could not read frame.");
                 break;
             }
             shouldRun = ((ImageWindow) HighGui.windows.values().toArray()[0]).frame.isVisible();
@@ -277,7 +286,7 @@ public class Main {
         }
         Card hyperspaceCard = collectionUtil.getHyperspaceCardFromName(card.getCardName(), SETS.get(setId));
         if (hyperspaceCard == null) {
-            System.out.println("No hyperspace available for card");
+            logInfo("No hyperspace available for card");
             return false;
         }
         currentCards.add(new Card(hyperspaceCard.getSet(), hyperspaceCard.getCardName(), hyperspaceCard.getCardNumber(), count, isFoil));
@@ -314,7 +323,7 @@ public class Main {
         for (String line : lines) {
             Size textSize = Imgproc.getTextSize(line, fontFace, fontScale, thickness, baseLine);
             maxWidth = Math.max(maxWidth, textSize.width) + hSpace;
-            totalHeight += textSize.height + lineSpacing; // Adding space between lines
+            totalHeight += (int) (textSize.height + lineSpacing); // Adding space between lines
         }
 
         // Draw the black rectangle for all lines
@@ -326,6 +335,15 @@ public class Main {
         for (int i = 0; i < lines.length; i++) {
             Point lineOrg = new Point(textOrg.x, textOrg.y - totalHeight + (i + 1) * (baseLine[0] + lineSpacing));
             Imgproc.putText(frame, lines[i], lineOrg, fontFace, fontScale, new Scalar(255, 255, 255), thickness);
+        }
+    }
+
+    public static void logInfo(String message){
+        System.out.println(message);
+    }
+    public static void logDebug(String message){
+        if("DEBUG".equals(LOG_LEVEL)){
+            System.out.println(message);
         }
     }
 

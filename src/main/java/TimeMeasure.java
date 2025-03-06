@@ -7,7 +7,7 @@ public class TimeMeasure {
         timeMap.put(name, System.currentTimeMillis());
     }
     public static void end(String name){
-        System.out.println("Time taken for "+name+": " + (System.currentTimeMillis() - timeMap.get(name)));
+        Main.logDebug("Time taken for "+name+": " + (System.currentTimeMillis() - timeMap.get(name)));
         timeMap.clear();
     }
 }
