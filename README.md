@@ -16,14 +16,14 @@ swudb.com/collection -> Bulk Actions -> CSV import
 If webcam not working try changing WEBCAM_ID in config.yml to something else
 (0 = first cam, 1 = second cam etc.)
 
+Using a smartphone as webcam makes it easier to use:
+* Android: https://droidcam.app/
+* Ios https://reincubate.com/camo/downloads/
+
 ## Develop 
 * Python
 * pip install requests
 * pip install pillow
-
-Using a smartphone as webcam makes it easier to use:
-* Android: https://droidcam.app/
-* Ios https://reincubate.com/camo/downloads/
 
 Note: only tested on windows
 
