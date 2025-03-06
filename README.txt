@@ -2,8 +2,6 @@ App for scanning cards in Star Wars Unlimited.
 Will create a CSV file at output_collection.csv that can be uploaded to
 swudb.com/collection -> Bulk Actions -> CSV import
 
-If you want to skip all this and trust a random .exe file you can just run
-run.exe
 
 Install:
 * Java - https://learn.microsoft.com/en-us/java/openjdk/download#openjdk-21
