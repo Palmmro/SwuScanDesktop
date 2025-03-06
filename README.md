@@ -3,7 +3,6 @@
 App for scanning cards in Star Wars Unlimited.
 Will create a CSV file at output_collection.csv that can be uploaded to
 swudb.com/collection -> Bulk Actions -> CSV import
-
 If the program is restarted the csv will reset before a new card is added. 
 
 ## Install:
